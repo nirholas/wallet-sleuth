@@ -1,4 +1,5 @@
 import { getChain } from '../chains.js';
+import { ProviderError } from '../errors.js';
 import { fetchJson } from '../util/http.js';
 import { cached } from '../util/cache.js';
 import { fromBaseUnits } from '../util/units.js';
@@ -313,6 +314,8 @@ export async function fetchV1Activity(
   const facts: Partial<AccountFacts> = {};
   let truncated = false;
   let reachedGenesis = false;
+  let succeeded = 0;
+  let failed = 0;
 
   const actions: { action: string; normalize: (rows: V1Tx[]) => Transfer[]; share: number }[] = [
     { action: 'txlist', normalize: (rows) => normalizeNative(rows, norm), share: 0.5 },
@@ -353,9 +356,13 @@ export async function fetchV1Activity(
         );
         const error = envelopeError(env);
         if (error) {
+          // An envelope error is a settled answer about this dataset (an unsupported action, a
+          // missing key), so it applies to every pass and there is nothing to retry.
           warnings.push(`${action} unavailable: ${error}`);
+          failed += 1;
           break;
         }
+        succeeded += 1;
         const rows = Array.isArray(env.result) ? env.result : [];
         if (rows.length >= pass.offset) truncated = true;
         // The ascending pass returns the oldest records the explorer holds, so completing it for
@@ -372,12 +379,25 @@ export async function fetchV1Activity(
             }
           }
         }
+        // An empty descending page means the account has no records of this kind at all, so the
+        // ascending pass has nothing to add.
         if (rows.length === 0) break;
       } catch (err) {
+        // A transient failure on one pass must not cancel the other. The ascending pass is the
+        // cheap one and it is the only source of first-funding evidence, so it always gets its own
+        // attempt rather than inheriting a rate limit from the descending pass.
         warnings.push(`${action} (${pass.sort}) failed: ${(err as Error).message}`);
-        break;
+        failed += 1;
+        continue;
       }
     }
+  }
+
+  // Returning an empty result after every request failed would read as "this address has no
+  // history", which is the most misleading thing a linkage tool can say. Fail instead, so the
+  // provider chain can try the next provider and, if none succeed, the report carries the reason.
+  if (succeeded === 0 && failed > 0) {
+    throw new ProviderError(provider, `no dataset could be read from ${new URL(baseUrl).host}: ${warnings[0] ?? 'unknown'}`);
   }
 
   const result = trim(dedupe(collected), options.maxTransfers);

@@ -109,7 +109,11 @@ export async function collectBundles(
   const dropped: AddressRef[] = [];
   for (const bundle of bundles) {
     const empty = bundle.transfers.length === 0 && !(bundle.facts.balance && bundle.facts.balance > 0);
-    if (empty && !bundle.ref.explicit) dropped.push(bundle.ref);
+    // Only drop an inferred chain guess when the lookup actually succeeded and found nothing. A
+    // provider failure is not evidence of an unused address, and quietly dropping it would hide the
+    // outage instead of reporting it.
+    const lookedSuccessfully = bundle.warnings.length === 0;
+    if (empty && lookedSuccessfully && !bundle.ref.explicit) dropped.push(bundle.ref);
     else kept.push(bundle);
   }
 

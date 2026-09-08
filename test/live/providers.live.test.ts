@@ -42,6 +42,8 @@ describeLive('Blockscout provider', () => {
     const activity = await provider.fetchActivity(ref, { maxTransfers: 60, since: 0, includeNft: false }, context());
 
     expect(activity.transfers.length).toBeGreaterThan(10);
+    // The ascending pass is what proves genesis, and it gets its own attempt even when the
+    // descending pass is rate limited, so a successful walk always establishes it.
     expect(activity.reachedGenesis).toBe(true);
     for (const transfer of activity.transfers) {
       expect(transfer.txHash).toMatch(/^0x[0-9a-f]{64}$/i);
