@@ -310,7 +310,17 @@ export function FlowGraph({ report }: Props) {
         </p>
       ) : null}
 
-      {selected ? <FlowDetail edge={selected} report={report} /> : null}
+      {selected ? <FlowDetail edge={selected} nodes={flow.nodes} /> : null}
+
+      <FlowList
+        edges={visibleEdges}
+        nodes={flow.nodes}
+        expanded={expanded}
+        expanding={expanding}
+        selected={selected?.id}
+        onSelect={setSelected}
+        onExpand={expandNode}
+      />
 
       {flow.unpricedAssets.length > 0 ? (
         <p className="hint" style={{ marginTop: 12 }}>
@@ -328,11 +338,109 @@ export function FlowGraph({ report }: Props) {
   );
 }
 
-function FlowDetail({ edge, report }: { edge: FlowEdge; report: AnalysisReport }) {
-  const nameOf = (id: string) => {
-    const node = report.flow.nodes.find((entry) => entry.id === id);
-    return node?.label ?? shortAddress(node?.address ?? id, 6, 4);
-  };
+function nameFor(nodes: FlowNode[], id: string): string {
+  const node = nodes.find((entry) => entry.id === id);
+  return node?.label ?? shortAddress(node?.address ?? id, 6, 4);
+}
+
+/**
+ * The same flows as a list.
+ *
+ * A canvas graph is unreachable by keyboard and invisible to a screen reader, so on its own it makes
+ * the whole feature mouse-only. This carries identical information in a form that tabs, reads aloud,
+ * and lets someone expand a specific counterparty without hunting for its dot.
+ */
+function FlowList({
+  edges,
+  nodes,
+  expanded,
+  expanding,
+  selected,
+  onSelect,
+  onExpand,
+}: {
+  edges: FlowEdge[];
+  nodes: FlowNode[];
+  expanded: Set<string>;
+  expanding: string | undefined;
+  selected: string | undefined;
+  onSelect(edge: FlowEdge): void;
+  onExpand(node: FlowNode): void;
+}) {
+  const top = edges.slice(0, 25);
+  return (
+    <div style={{ marginTop: 16 }}>
+      <h3 className="flow-list-heading">Largest flows</h3>
+      <div className="table-scroll">
+        <table>
+          <caption className="sr-only">
+            Value flows between the analysed addresses and their counterparties, largest first
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">From</th>
+              <th scope="col">To</th>
+              <th scope="col">Value</th>
+              <th scope="col">Asset</th>
+              <th scope="col">Transfers</th>
+              <th scope="col">Follow</th>
+            </tr>
+          </thead>
+          <tbody>
+            {top.map((edge) => {
+              const target = nodes.find((node) => node.id === edge.target);
+              const source = nodes.find((node) => node.id === edge.source);
+              const followable = [target, source].find(
+                (node) => node && node.kind === 'counterparty' && !expanded.has(node.id),
+              );
+              return (
+                <tr key={edge.id} className={selected === edge.id ? 'row-selected' : undefined}>
+                  <td className="mono">
+                    <button type="button" className="linklike" onClick={() => onSelect(edge)}>
+                      {nameFor(nodes, edge.source)}
+                    </button>
+                    {source?.sanctioned ? <span className="chip tone-out">OFAC</span> : null}
+                  </td>
+                  <td className="mono">
+                    {nameFor(nodes, edge.target)}
+                    {target?.sanctioned ? <span className="chip tone-out">OFAC</span> : null}
+                  </td>
+                  <td>{edge.usd > 0 ? usd(edge.usd) : '-'}</td>
+                  <td className="mono">{edge.asset}</td>
+                  <td>{edge.transfers}</td>
+                  <td>
+                    {followable ? (
+                      <button
+                        type="button"
+                        className="btn btn-tiny"
+                        disabled={Boolean(expanding)}
+                        onClick={() => onExpand(followable)}
+                      >
+                        {expanding === followable.id ? 'reading...' : 'follow'}
+                      </button>
+                    ) : (
+                      <span className="hint" style={{ margin: 0 }}>
+                        {expanded.has(edge.target) || expanded.has(edge.source) ? 'followed' : 'analysed'}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {edges.length > top.length ? (
+        <p className="hint">
+          Showing the {top.length} largest of {edges.length}. The rest are in the graph and the JSON export.
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function FlowDetail({ edge, nodes }: { edge: FlowEdge; nodes: FlowNode[] }) {
+  const nameOf = (id: string) => nameFor(nodes, id);
   return (
     <div className="cluster" style={{ padding: '12px 14px', marginTop: 12 }}>
       <strong className="mono">

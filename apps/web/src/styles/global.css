@@ -675,6 +675,26 @@ details.advanced[open] summary::before {
   border: none;
 }
 
+.flow-list-heading {
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+.btn-tiny {
+  padding: 3px 10px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+tr.row-selected {
+  background: var(--bg-hover);
+}
+tr.row-selected td:first-child {
+  box-shadow: inset 2px 0 0 var(--text);
+}
+
 button.linklike {
   color: var(--text);
   text-decoration: underline;
