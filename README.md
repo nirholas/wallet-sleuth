@@ -1,4 +1,4 @@
-<h1 align="center">Braid</h1>
+<h1 align="center">Wallet Sleuth</h1>
 
 <p align="center">
   <strong>Wallet linkage analysis for EVM and Solana.</strong><br>
@@ -16,27 +16,27 @@
 
 ---
 
-Braid answers one question: **do these wallet addresses belong together?**
+Wallet Sleuth answers one question: **do these wallet addresses belong together?**
 
 Give it a list of public addresses on any mix of supported EVM chains and Solana. It reads their real
 on-chain history, runs fourteen linkage signals over it, and returns a score for every pair together
 with the exact transactions behind each score.
 
-It is not an identity tool. Braid never tells you *who* owns an address, because public chain data
+It is not an identity tool. Wallet Sleuth never tells you *who* owns an address, because public chain data
 does not contain that. It tells you which addresses behave as though one operator is behind them, and
 it shows its work so you can judge for yourself.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/braid-tools/braid.git
-cd braid
+git clone https://github.com/nirholas/wallet-sleuth.git
+cd sleuth
 npm install
 npm run build
 npm start
 ```
 
-Open <http://localhost:8787>. No API key, no account, no configuration: Braid reads from keyless
+Open <http://localhost:8787>. No API key, no account, no configuration: Wallet Sleuth reads from keyless
 public endpoints out of the box.
 
 ```bash
@@ -63,7 +63,7 @@ curl -s localhost:8787/v1/analyze -H 'content-type: application/json' -d '{
 
 ## What makes a link
 
-Braid runs fourteen signals across five categories. Weights are deliberately unequal: reading an
+Wallet Sleuth runs fourteen signals across five categories. Weights are deliberately unequal: reading an
 ownership record off chain state is a different kind of claim from noticing two wallets are awake at
 the same time of day.
 
@@ -82,12 +82,12 @@ Full descriptions, including how each one can be wrong, are in [docs/signals.md]
 **Every claim is checkable.** Each piece of evidence carries the amounts, the timings and the
 explorer links. You never have to take a score on faith.
 
-**It refuses to guess.** The first-funding signals are the strongest ordinary evidence Braid has, and
+**It refuses to guess.** The first-funding signals are the strongest ordinary evidence Wallet Sleuth has, and
 they are withheld entirely unless the sample provably reaches the account's first transaction. On a
 truncated history the earliest transfer visible is an artefact of the budget, not an opening balance.
 
 **Hubs are removed before they become evidence.** Two addresses both using Uniswap is not a link.
-Braid drops labelled services, contracts and high-degree counterparties, then resolves what remains:
+Wallet Sleuth drops labelled services, contracts and high-degree counterparties, then resolves what remains:
 a shared counterparty that forwards into an exchange is a per-customer deposit address, and that
 *is* a link. The report lists everything it discounted and why.
 
@@ -100,9 +100,9 @@ noisy-OR, and no amount of weak evidence ever reaches certainty. See [docs/scori
 
 ## Keyless by default, fast when configured
 
-Braid ships reading from public Blockscout instances and public Solana RPC endpoints, because a tool
+Wallet Sleuth ships reading from public Blockscout instances and public Solana RPC endpoints, because a tool
 that needs three API keys before it can answer a question does not get used. Those endpoints throttle,
-so Braid paces itself per host with an adaptive backoff, learns undeclared batch limits from the
+so Wallet Sleuth paces itself per host with an adaptive backoff, learns undeclared batch limits from the
 errors that announce them, treats rate limits hidden inside HTTP 200 responses as throttling, and
 cross-checks any short history page against every other configured endpoint before believing it.
 
@@ -122,7 +122,7 @@ chain, because one key controls the same address on all of them.
 | [`packages/core`](packages/core) | The engine: providers, signals, scoring, clustering, exports |
 | [`apps/api`](apps/api) | Fastify HTTP API, job queue, OpenAPI, and the host for the web client |
 | [`apps/web`](apps/web) | React client: address input, live progress, graph, evidence |
-| [`apps/cli`](apps/cli) | `braid` command line interface |
+| [`apps/cli`](apps/cli) | `sleuth` command line interface |
 | [`docs`](docs) | The documentation, rendered as-is by the website |
 | [`scripts`](scripts) | Maintenance scripts, including the signal doc generator |
 
@@ -146,7 +146,7 @@ cannot drift.
 
 Chain analysis holds exchanges accountable, traces stolen funds, and catches sybil attacks. It is
 also used to stalk and to dox. The technology does not distinguish between those uses; the people
-building and running it have to. Braid reads public data only, stores nothing, identifies nobody, and
+building and running it have to. Wallet Sleuth reads public data only, stores nothing, identifies nobody, and
 shows its evidence so a claim can be checked rather than trusted. Please read
 [docs/privacy-and-ethics.md](docs/privacy-and-ethics.md) before you deploy it.
 

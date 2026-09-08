@@ -1,6 +1,6 @@
 # How it works
 
-Braid runs a five stage pipeline. Every stage degrades rather than fails: a provider outage costs
+Wallet Sleuth runs a five stage pipeline. Every stage degrades rather than fails: a provider outage costs
 coverage and is written into the report, it never produces invented data.
 
 ## 1. Parse and fan out
@@ -19,7 +19,7 @@ rather than padding it with empty rows.
 
 ## 2. Collect
 
-For each address, Braid pulls an activity sample from the highest priority provider that supports its
+For each address, Wallet Sleuth pulls an activity sample from the highest priority provider that supports its
 chain, falling back down the chain on failure.
 
 On EVM chains it reads native transfers, ERC-20 transfers and internal transactions. It reads each
@@ -30,7 +30,7 @@ history.
 
 On Solana it walks signatures backwards and decodes each transaction, resolving SPL token accounts to
 their owning wallets so a transfer is attributed to the person, not to the token account. Where an
-RPC could not decode a transaction, Braid falls back to net lamport balance deltas and marks those
+RPC could not decode a transaction, Wallet Sleuth falls back to net lamport balance deltas and marks those
 transfers as inferred rather than exact.
 
 Two properties are tracked per address and both end up in the report:
@@ -42,14 +42,14 @@ Two properties are tracked per address and both end up in the report:
 
 Since Pectra an externally owned account can carry delegated code, and explorers report those
 accounts as contracts, because at the bytecode level they are. They are still wallets with a person
-behind them, and they are among the most informative counterparties an analysis can have. Braid
+behind them, and they are among the most informative counterparties an analysis can have. Wallet Sleuth
 detects the delegation, records it as its own fact, and does **not** classify the account as a
 contract; the signals that skip contracts therefore keep working on 7702 wallets. Reports label them
 `7702 account`.
 
-`historyComplete` gates the first-funding signals. On a partial sample the earliest transfer Braid can
+`historyComplete` gates the first-funding signals. On a partial sample the earliest transfer Wallet Sleuth can
 see is an artefact of the budget, not the account's opening balance, and treating it as one would
-manufacture false links. Braid withholds the signal instead and says so.
+manufacture false links. Wallet Sleuth withholds the signal instead and says so.
 
 ## 3. Resolve shared counterparties
 
@@ -59,7 +59,7 @@ Two addresses both paying into the same account means nothing if that account is
 great deal if that account is a personal wallet that forwards into an exchange, because exchange
 deposit addresses are issued per customer.
 
-So Braid takes the counterparties shared by two or more inputs, drops anything already known to be a
+So Wallet Sleuth takes the counterparties shared by two or more inputs, drops anything already known to be a
 service (see the [labels](./providers.md#labels)), and looks up the rest: is it a contract? does it
 forward into a labelled exchange? A shared counterparty that survives all of that is evidence.
 Everything else is recorded in the report's hub list, so you can see exactly what was discounted and

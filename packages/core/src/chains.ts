@@ -3,8 +3,8 @@ import type { ChainDescriptor, Namespace } from './types.js';
 /**
  * The chain registry.
  *
- * `blockscout` hosts are keyless and are what Braid uses out of the box. `etherscanV2` marks
- * chains the Etherscan V2 multichain API covers, which Braid prefers when a key is configured
+ * `blockscout` hosts are keyless and are what Wallet Sleuth uses out of the box. `etherscanV2` marks
+ * chains the Etherscan V2 multichain API covers, which Wallet Sleuth prefers when a key is configured
  * because it is faster and paginates further.
  */
 const CHAIN_LIST: ChainDescriptor[] = [

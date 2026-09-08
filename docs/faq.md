@@ -1,8 +1,8 @@
 # FAQ
 
 **Does this tell me who owns an address?**
-No. Braid reports which addresses behave as though one operator is behind them. Public chain data
-does not contain identities and Braid does not try to supply them.
+No. Wallet Sleuth reports which addresses behave as though one operator is behind them. Public chain data
+does not contain identities and Wallet Sleuth does not try to supply them.
 
 **Why does it take a minute?**
 Because it reads real history from public endpoints that rate limit. A two-address Solana analysis is
@@ -16,18 +16,18 @@ dropped from the report. Pin a chain with a prefix (`base:0xabc...`) or the `cha
 
 **Two addresses I know are related scored low. Why?**
 Usually one of three reasons, all of which the report states: the history budget truncated the sample
-before the connecting transactions, the connection runs through an address Braid classified as a hub,
+before the connecting transactions, the connection runs through an address Wallet Sleuth classified as a hub,
 or the relationship is real but not visible on chain at all. Raise `maxTransfersPerAddress`, lower
 `minScore` to see the weak tail, and read the hub list.
 
 **Two addresses I know are unrelated scored high. Why?**
-Check the evidence. The common causes are a shared service Braid does not have a label for, an airdrop
+Check the evidence. The common causes are a shared service Wallet Sleuth does not have a label for, an airdrop
 or payroll batch that funded both, and address poisoning dust. All three are described in
 [interpreting results](./interpreting-results.md). If you find a service that should be labelled,
 adding it is a one line change to `packages/core/src/labels/known-entities.json`.
 
 **Can I add my own labels?**
-Yes. Point `BRAID_LABELS_FILE` at a JSON file in the same shape as the built-in one. See
+Yes. Point `SLEUTH_LABELS_FILE` at a JSON file in the same shape as the built-in one. See
 [providers](./providers.md#labels).
 
 **Does it support Bitcoin?**
@@ -40,8 +40,8 @@ No. See [scoring](./scoring.md). It is a calibrated summary of independent evide
 are what carry the meaning.
 
 **Can I run it fully offline or against private infrastructure?**
-Yes. Set `SOLANA_RPC_URLS` to your own nodes and `BRAID_BLOCKSCOUT_<CHAIN>` to your own explorer
-instances. Braid makes no outbound requests other than to the configured providers.
+Yes. Set `SOLANA_RPC_URLS` to your own nodes and `SLEUTH_BLOCKSCOUT_<CHAIN>` to your own explorer
+instances. Wallet Sleuth makes no outbound requests other than to the configured providers.
 
 **What happens to the addresses I submit?**
 They are held in memory for the life of the job (one hour by default) and sent to the configured

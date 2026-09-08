@@ -1,6 +1,6 @@
 # Data providers
 
-Braid reads live chain data. It has no database of its own and no cached view of the world beyond a
+Wallet Sleuth reads live chain data. It has no database of its own and no cached view of the world beyond a
 short lived request cache.
 
 ## Keyless by default
@@ -23,7 +23,7 @@ question does not get used. The cost is speed, and the honest ceiling of the fre
 
 Providers are tried highest priority first, and a failure falls through to the next one that supports
 the chain. When every provider for an address fails, the address still appears in the report with the
-failure attached; Braid never substitutes invented data for a failed lookup.
+failure attached; Wallet Sleuth never substitutes invented data for a failed lookup.
 
 ## Making it faster
 
@@ -36,11 +36,11 @@ comma separated list, highest priority first; the public defaults are appended a
 
 **`REDIS_URL`** shares the provider cache between instances, so a fleet behind a load balancer pays
 for each upstream read once. Transactions are cached for a week because a confirmed transaction never
-changes; everything else uses `BRAID_CACHE_TTL_SECONDS` (default 900).
+changes; everything else uses `SLEUTH_CACHE_TTL_SECONDS` (default 900).
 
-## How Braid behaves against public endpoints
+## How Wallet Sleuth behaves against public endpoints
 
-Public endpoints rate limit, and they do it in ways that are easy to mishandle. Braid handles four
+Public endpoints rate limit, and they do it in ways that are easy to mishandle. Wallet Sleuth handles four
 specific behaviours, all of which were observed against the default endpoints:
 
 **Rate limiting by HTTP 429.** Every outbound request passes through a per-host queue with a
@@ -48,11 +48,11 @@ concurrency cap and a minimum gap between requests. The gap is adaptive: it star
 widens it sharply, and sustained success narrows it back. Nobody's limits are hardcoded.
 
 **Rate limiting inside a 200 response.** One of the default Solana endpoints answers a batch request
-with HTTP 200 and a body full of per-item rate limit errors. Braid treats those as throttling, which
+with HTTP 200 and a body full of per-item rate limit errors. Wallet Sleuth treats those as throttling, which
 demotes the endpoint in its health ranking, rather than as missing data.
 
 **Undeclared batch limits.** Another endpoint accepts at most one `getTransaction` per batch and says
-so in an HTTP 400. Braid reads the limit out of the error and adapts to it permanently, then works at
+so in an HTTP 400. Wallet Sleuth reads the limit out of the error and adapts to it permanently, then works at
 that size.
 
 **Silently truncated history.** The two default Solana endpoints do not serve the same depth of
@@ -67,15 +67,15 @@ it. `GET /readyz` exposes the live pacing and health per host.
 
 ## Labels
 
-Braid ships a curated list of service addresses: exchange hot wallets, bridges, routers, mixers,
+Wallet Sleuth ships a curated list of service addresses: exchange hot wallets, bridges, routers, mixers,
 staking contracts, well known tokens and Solana programs. Their role is to mark counterparties whose
 co-occurrence proves nothing, so that "both addresses used Uniswap" never becomes evidence.
 
-Labels are not the only defence. Braid also treats a counterparty as a hub when it is a contract, or
+Labels are not the only defence. Wallet Sleuth also treats a counterparty as a hub when it is a contract, or
 when it is touched by a large share of the analysed addresses. Unlabelled services are therefore
 discounted automatically, just less confidently.
 
-To add your own attribution, point `BRAID_LABELS_FILE` at a JSON file shaped like the built-in one:
+To add your own attribution, point `SLEUTH_LABELS_FILE` at a JSON file shaped like the built-in one:
 
 ```json
 {

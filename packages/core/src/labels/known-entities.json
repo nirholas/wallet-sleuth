@@ -1,7 +1,7 @@
 {
   "$schema": "./labels.schema.json",
   "version": "2026-09-08",
-  "note": "Curated service addresses. Presence here means co-occurrence with the address proves nothing about common ownership (hub: true) or that the address is a contract/program rather than a wallet. Extend with BRAID_LABELS_FILE.",
+  "note": "Curated service addresses. Presence here means co-occurrence with the address proves nothing about common ownership (hub: true) or that the address is a contract/program rather than a wallet. Extend with SLEUTH_LABELS_FILE.",
   "entries": [
     { "chain": "*", "address": "0x0000000000000000000000000000000000000000", "name": "Null address", "kind": "burn", "hub": true },
     { "chain": "*", "address": "0x000000000000000000000000000000000000dead", "name": "Burn address", "kind": "burn", "hub": true },

@@ -10,14 +10,14 @@ import {
 } from '../../packages/core/src/index.js';
 
 /**
- * Integration tests against the real public endpoints Braid ships with.
+ * Integration tests against the real public endpoints Wallet Sleuth ships with.
  *
- * They are skipped unless `BRAID_LIVE=1`, because they depend on third-party availability and would
+ * They are skipped unless `SLEUTH_LIVE=1`, because they depend on third-party availability and would
  * otherwise make an unrelated change look broken. Run them with `npm run test:live` before a release
  * and whenever a provider's behaviour is in question: everything here has failed in production at
  * least once, which is why it is asserted.
  */
-const live = process.env.BRAID_LIVE === '1';
+const live = process.env.SLEUTH_LIVE === '1';
 const describeLive = live ? describe : describe.skip;
 
 /**
@@ -80,7 +80,7 @@ describeLive('Blockscout provider', () => {
     if (facts.balance === undefined && facts.isContract === undefined) {
       return ctxTest.skip('the public explorer returned no facts, most likely rate limiting this address');
     }
-    // vitalik.eth carries EIP-7702 delegated code, which explorers report as a contract. Braid must
+    // vitalik.eth carries EIP-7702 delegated code, which explorers report as a contract. Wallet Sleuth must
     // classify it as the wallet it is, or every shared-counterparty signal would discard it.
     expect(facts.isContract).toBe(false);
     expect(facts.delegated).toBe(true);

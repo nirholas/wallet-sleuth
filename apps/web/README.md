@@ -1,14 +1,14 @@
-# @braid/web
+# @wallet-sleuth/web
 
-The Braid web client: address input with live validation, streaming progress, an interactive linkage
+The Wallet Sleuth web client: address input with live validation, streaming progress, an interactive linkage
 graph, and per-signal evidence with explorer links.
 
 ```bash
-npm run dev --workspace @braid/web     # :5173, proxying the API on :8787
-npm run build --workspace @braid/web   # emits dist/, served by @braid/api
+npm run dev --workspace @wallet-sleuth/web     # :5173, proxying the API on :8787
+npm run build --workspace @wallet-sleuth/web   # emits dist/, served by @wallet-sleuth/api
 ```
 
-Set `BRAID_API` to point the dev proxy somewhere other than `http://localhost:8787`.
+Set `SLEUTH_API` to point the dev proxy somewhere other than `http://localhost:8787`.
 
 ## Structure
 

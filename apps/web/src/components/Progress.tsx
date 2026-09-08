@@ -37,7 +37,7 @@ export function Progress({ job }: { job: JobView }) {
         ))}
       </div>
       <p className="hint" style={{ margin: '14px 0 0' }}>
-        Braid reads history straight from public explorers and RPC endpoints. A first run against those takes
+        Wallet Sleuth reads history straight from public explorers and RPC endpoints. A first run against those takes
         anywhere from ten seconds to a couple of minutes depending on how busy the addresses are; repeat runs are
         served from cache.
       </p>

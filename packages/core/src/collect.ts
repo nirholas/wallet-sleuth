@@ -5,7 +5,7 @@ import { providersFor } from './providers/registry.js';
 import type { ChainProvider, CollectOptions, FetchContext } from './providers/types.js';
 import type { AccountFacts, ActivityBundle, AddressRef, ProgressFn, Transfer } from './types.js';
 
-/** A counterparty Braid looked up to decide whether it is a hub, a contract or a deposit address. */
+/** A counterparty Wallet Sleuth looked up to decide whether it is a hub, a contract or a deposit address. */
 export interface ContextAccount {
   key: string;
   chain: string;

@@ -8,7 +8,7 @@ import fastifyStatic from '@fastify/static';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, { type FastifyInstance } from 'fastify';
-import { BraidError, buildProviders, MemoryCache, schedulerSnapshot, VERSION, type CacheStore } from '@braid/core';
+import { SleuthError, buildProviders, MemoryCache, schedulerSnapshot, VERSION, type CacheStore } from '@wallet-sleuth/core';
 import { loadConfig, type ServerConfig } from './config.js';
 import { JobQueue } from './lib/jobs.js';
 import { RedisCache } from './lib/redis-cache.js';
@@ -91,7 +91,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
     openapi: {
       openapi: '3.1.0',
       info: {
-        title: 'Braid API',
+        title: 'Wallet Sleuth API',
         version: VERSION,
         description:
           'Wallet linkage analysis for EVM and Solana. Submit public addresses, receive scored links with the on-chain evidence behind each one.',
@@ -103,7 +103,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
       ],
       components: {
         securitySchemes: {
-          bearerAuth: { type: 'http', scheme: 'bearer', description: 'Required only when BRAID_API_KEYS is set' },
+          bearerAuth: { type: 'http', scheme: 'bearer', description: 'Required only when SLEUTH_API_KEYS is set' },
         },
       },
     },
@@ -127,7 +127,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
   }
 
   app.setErrorHandler((error, request, reply) => {
-    if (error instanceof BraidError) {
+    if (error instanceof SleuthError) {
       return reply.code(error.status).send({ error: error.code, message: error.message, details: error.details });
     }
     if ((error as unknown as { statusCode?: number }).statusCode === 429) {
@@ -173,7 +173,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
       reply.code(404).send({
         error: 'not_found',
         message: `no route for ${request.url}`,
-        hint: 'the web client is not built; run `npm run build --workspace @braid/web`',
+        hint: 'the web client is not built; run `npm run build --workspace @wallet-sleuth/web`',
       }),
     );
   }

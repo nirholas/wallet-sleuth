@@ -1,4 +1,4 @@
-# Braid ships as one container: the API, the OpenAPI reference and the web client on one port.
+# Wallet Sleuth ships as one container: the API, the OpenAPI reference and the web client on one port.
 FROM node:22-alpine AS build
 WORKDIR /app
 

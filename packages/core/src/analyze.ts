@@ -97,7 +97,7 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
   const stats = new StatsCollector();
   const ctx: FetchContext = {
     cache: deps.cache ?? new MemoryCache(),
-    cacheTtlSeconds: deps.cacheTtlSeconds ?? Number(process.env.BRAID_CACHE_TTL_SECONDS ?? 900),
+    cacheTtlSeconds: deps.cacheTtlSeconds ?? Number(process.env.SLEUTH_CACHE_TTL_SECONDS ?? 900),
     stats,
     signal: deps.signal,
     deadline: started + options.budgetMs,

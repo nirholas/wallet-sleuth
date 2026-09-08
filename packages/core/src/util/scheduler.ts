@@ -1,7 +1,7 @@
 /**
  * Per-host request pacing.
  *
- * Keyless public endpoints are the whole point of Braid running with no configuration, and they
+ * Keyless public endpoints are the whole point of Wallet Sleuth running with no configuration, and they
  * rate limit hard. Firing requests as fast as the event loop allows turns a working analysis into a
  * wall of 429s, so every outbound call passes through a per-host queue with a concurrency cap and a
  * minimum gap between requests. The gap is adaptive: a 429 widens it, sustained success narrows it
@@ -18,9 +18,9 @@ interface HostState {
   health: number;
 }
 
-const DEFAULT_CONCURRENCY = Number(process.env.BRAID_HOST_CONCURRENCY ?? 6);
-const DEFAULT_INTERVAL = Number(process.env.BRAID_HOST_MIN_INTERVAL_MS ?? 60);
-const MAX_INTERVAL = Number(process.env.BRAID_HOST_MAX_INTERVAL_MS ?? 2000);
+const DEFAULT_CONCURRENCY = Number(process.env.SLEUTH_HOST_CONCURRENCY ?? 6);
+const DEFAULT_INTERVAL = Number(process.env.SLEUTH_HOST_MIN_INTERVAL_MS ?? 60);
+const MAX_INTERVAL = Number(process.env.SLEUTH_HOST_MAX_INTERVAL_MS ?? 2000);
 
 const hosts = new Map<string, HostState>();
 

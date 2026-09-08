@@ -5,7 +5,7 @@ import { commonPayee, directTransfer } from './flow.js';
 import type { Signal, SignalContext } from './context.js';
 import type { Evidence } from '../types.js';
 
-/** Every signal Braid can run, in the order they are reported. */
+/** Every signal Wallet Sleuth can run, in the order they are reported. */
 export const ALL_SIGNALS: Signal[] = [
   solanaAccountControl,
   solanaFeePayer,

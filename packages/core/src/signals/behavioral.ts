@@ -15,7 +15,7 @@ export const temporalProfile: Signal = {
   weight: 0.15,
   title: 'Matching activity hours',
   description:
-    'Cosine similarity between the two addresses\' UTC hour-of-day activity histograms, computed only when both have enough activity to make a profile meaningful. A human operator leaves a daily rhythm; a bot leaves a flat one. This is the weakest signal Braid emits and cannot lift a pair past the weak band on its own.',
+    'Cosine similarity between the two addresses\' UTC hour-of-day activity histograms, computed only when both have enough activity to make a profile meaningful. A human operator leaves a daily rhythm; a bot leaves a flat one. This is the weakest signal Wallet Sleuth emits and cannot lift a pair past the weak band on its own.',
   run(ctx: SignalContext): Evidence[] {
     const out: Evidence[] = [];
     for (const [left, right] of pairs(ctx)) {

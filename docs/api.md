@@ -5,10 +5,10 @@ OpenAPI reference is served at `/docs/api`, and the raw document at `/docs/api/j
 
 ## Authentication
 
-None by default. Set `BRAID_API_KEYS` to a comma separated list to require
+None by default. Set `SLEUTH_API_KEYS` to a comma separated list to require
 `Authorization: Bearer <key>` on every `/v1` route. Rate limiting is per API key when keys are in
-use, per IP otherwise. `BRAID_RATE_LIMIT` (default 60/minute) covers general traffic and `0` disables
-it; `BRAID_ANALYZE_RATE_LIMIT` (default 10/minute) applies on top of it to `POST /v1/analyze`, the
+use, per IP otherwise. `SLEUTH_RATE_LIMIT` (default 60/minute) covers general traffic and `0` disables
+it; `SLEUTH_ANALYZE_RATE_LIMIT` (default 10/minute) applies on top of it to `POST /v1/analyze`, the
 only route that spends upstream requests. `/healthz`, `/readyz`, `/v1/chains`, `/v1/signals` and
 `/v1/version` are exempt, because counting page loads against the budget locks people out of the
 tool itself.
@@ -92,7 +92,7 @@ curl -N http://localhost:8787/v1/jobs/$ID/events
 
 The full report. `409` if the job is not finished, with the current status and progress in the body.
 The report shape is documented in [interpreting results](./interpreting-results.md) and typed in
-`@braid/core`'s `AnalysisReport`.
+`@wallet-sleuth/core`'s `AnalysisReport`.
 
 ## GET /v1/jobs/{id}/export?format=
 
@@ -111,7 +111,7 @@ you type.
 
 ## GET /v1/chains
 
-Every chain Braid can read, with its namespace, EIP-155 id where applicable, native symbol and
+Every chain Wallet Sleuth can read, with its namespace, EIP-155 id where applicable, native symbol and
 explorer URLs.
 
 ## GET /v1/signals

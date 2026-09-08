@@ -18,8 +18,8 @@ import { extractTransfers, isRetryable, parseBatchLimit } from '../src/providers
 import type { Transfer } from '../src/types.js';
 
 /**
- * These fixtures are real responses recorded from the public endpoints Braid uses by default.
- * Normalisation is where a provider's shape becomes Braid's shape, and it is exactly the layer that
+ * These fixtures are real responses recorded from the public endpoints Wallet Sleuth uses by default.
+ * Normalisation is where a provider's shape becomes Wallet Sleuth's shape, and it is exactly the layer that
  * breaks silently when an upstream changes a field name, so it is pinned against real bytes.
  */
 const OPTIONS: NormalizeOptions = {

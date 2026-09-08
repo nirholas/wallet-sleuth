@@ -1,32 +1,32 @@
 # Start here
 
-Braid answers one question: **do these wallet addresses belong together?**
+Wallet Sleuth answers one question: **do these wallet addresses belong together?**
 
 You give it a list of public addresses, on any mix of supported EVM chains and Solana. It reads their
 real on-chain history, runs fourteen linkage signals over that history, and returns a score for every
 pair along with the exact transactions behind each score.
 
-It is not an identity tool. Braid never tells you *who* owns an address, because public chain data
+It is not an identity tool. Wallet Sleuth never tells you *who* owns an address, because public chain data
 does not contain that. It tells you which addresses behave as though one operator is behind them, and
 it shows its work so you can judge for yourself.
 
 ## Sixty seconds to a first result
 
 ```bash
-git clone https://github.com/braid-tools/braid.git
-cd braid
+git clone https://github.com/nirholas/wallet-sleuth.git
+cd sleuth
 npm install
 npm run build
 npm start
 ```
 
 Open <http://localhost:8787>, paste two addresses, run the analysis. No API key, no account, no
-configuration. Braid reads from keyless public endpoints out of the box.
+configuration. Wallet Sleuth reads from keyless public endpoints out of the box.
 
 From the command line:
 
 ```bash
-npx braid analyze \
+npx sleuth analyze \
   0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 \
   0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B \
   --chains ethereum
@@ -53,7 +53,7 @@ Membership is transitive: A and C can share a cluster because both link to B, ev
 touched. The report always tells you the weakest edge holding a cluster together, so a transitive
 merge is never hidden inside a single number.
 
-**Addresses.** What Braid actually read for each address: how many transfers, how many
+**Addresses.** What Wallet Sleuth actually read for each address: how many transfers, how many
 counterparties, the date range, and whether it saw the account's complete history or only a sample.
 
 **Caveats.** Everything that could make the result wrong: truncated history, rate limited providers,

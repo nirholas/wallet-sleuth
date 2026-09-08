@@ -96,27 +96,27 @@ let cachedRegistry: LabelRegistry | undefined;
 /**
  * The process-wide label registry.
  *
- * Built-in entries always load. `BRAID_LABELS_FILE` may point at a JSON file with the same shape;
+ * Built-in entries always load. `SLEUTH_LABELS_FILE` may point at a JSON file with the same shape;
  * its entries are layered on top, so operators can add their own attribution without a rebuild.
  */
 export function labels(): LabelRegistry {
   if (cachedRegistry) return cachedRegistry;
   const files: { file: LabelFile; source: string }[] = [
-    { file: builtin as unknown as LabelFile, source: 'braid' },
+    { file: builtin as unknown as LabelFile, source: 'sleuth' },
   ];
-  const override = process.env.BRAID_LABELS_FILE;
+  const override = process.env.SLEUTH_LABELS_FILE;
   if (override) {
     try {
       files.push({ file: JSON.parse(readFileSync(override, 'utf8')) as LabelFile, source: override });
     } catch (err) {
-      throw new Error(`BRAID_LABELS_FILE could not be read: ${(err as Error).message}`, { cause: err });
+      throw new Error(`SLEUTH_LABELS_FILE could not be read: ${(err as Error).message}`, { cause: err });
     }
   }
   cachedRegistry = new LabelRegistry(files);
   return cachedRegistry;
 }
 
-/** Test hook: forget the memoized registry so a new `BRAID_LABELS_FILE` takes effect. */
+/** Test hook: forget the memoized registry so a new `SLEUTH_LABELS_FILE` takes effect. */
 export function resetLabels(): void {
   cachedRegistry = undefined;
 }

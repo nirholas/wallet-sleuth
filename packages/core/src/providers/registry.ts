@@ -9,7 +9,7 @@ import type { ChainProvider } from './types.js';
  * Assembles the provider chain.
  *
  * Order is by priority, so a configured Etherscan key is tried before the keyless Blockscout
- * instance, and collection falls through to the next provider when one is unavailable. Braid never
+ * instance, and collection falls through to the next provider when one is unavailable. Wallet Sleuth never
  * substitutes synthetic data for a failed provider: an address whose providers all fail is reported
  * with the failure attached.
  */

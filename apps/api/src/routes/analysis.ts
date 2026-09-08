@@ -9,7 +9,7 @@ import {
   parseAddressList,
   toGraphml,
   VERSION,
-} from '@braid/core';
+} from '@wallet-sleuth/core';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { toView, type Job, type JobQueue } from '../lib/jobs.js';
@@ -83,7 +83,7 @@ export function registerAnalysisRoutes(app: FastifyInstance, queue: JobQueue, an
 
   app.get(
     '/v1/chains',
-    { schema: { summary: 'Chains Braid can read', tags: ['meta'] } },
+    { schema: { summary: 'Chains Wallet Sleuth can read', tags: ['meta'] } },
     async () => ({ chains: listChains() }),
   );
 
@@ -267,21 +267,21 @@ export function registerAnalysisRoutes(app: FastifyInstance, queue: JobQueue, an
         case 'accounts.csv':
           return reply
             .header('content-type', 'text/csv; charset=utf-8')
-            .header('content-disposition', `attachment; filename="braid-${id}-accounts.csv"`)
+            .header('content-disposition', `attachment; filename="sleuth-${id}-accounts.csv"`)
             .send(accountsToCsv(report));
         case 'graphml':
           return reply
             .header('content-type', 'application/xml; charset=utf-8')
-            .header('content-disposition', `attachment; filename="braid-${id}.graphml"`)
+            .header('content-disposition', `attachment; filename="sleuth-${id}.graphml"`)
             .send(toGraphml(report));
         case 'json':
           return reply
-            .header('content-disposition', `attachment; filename="braid-${id}.json"`)
+            .header('content-disposition', `attachment; filename="sleuth-${id}.json"`)
             .send(report);
         default:
           return reply
             .header('content-type', 'text/csv; charset=utf-8')
-            .header('content-disposition', `attachment; filename="braid-${id}-edges.csv"`)
+            .header('content-disposition', `attachment; filename="sleuth-${id}-edges.csv"`)
             .send(edgesToCsv(report));
       }
     },

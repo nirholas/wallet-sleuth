@@ -47,7 +47,7 @@ export function toGraphml(report: AnalysisReport): string {
   <key id="score" for="edge" attr.name="score" attr.type="int"/>
   <key id="band" for="edge" attr.name="band" attr.type="string"/>
   <key id="signals" for="edge" attr.name="signals" attr.type="string"/>
-  <graph id="braid-${xml(report.id)}" edgedefault="undirected">
+  <graph id="sleuth-${xml(report.id)}" edgedefault="undirected">
 ${nodes}
 ${edges}
   </graph>

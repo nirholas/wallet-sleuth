@@ -20,7 +20,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     });
   } catch (err) {
     throw new ApiError(
-      `could not reach the Braid API (${(err as Error).message}). Is the server running?`,
+      `could not reach the Wallet Sleuth API (${(err as Error).message}). Is the server running?`,
       0,
     );
   }

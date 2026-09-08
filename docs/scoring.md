@@ -1,7 +1,7 @@
 # Scoring
 
 A score is a number between 0 and 100 attached to a pair of addresses. It is not a probability that
-the addresses share an owner, and Braid does not claim it is. It is a calibrated summary of how much
+the addresses share an owner, and Wallet Sleuth does not claim it is. It is a calibrated summary of how much
 independent evidence there is, on a scale where the bands mean something specific.
 
 ## From evidence to a score
@@ -64,7 +64,7 @@ accumulate.
 | `clusterThreshold` | 55 | Pairs at or above this merge into one cluster. |
 | `hubShareThreshold` | 8 | A counterparty touched by this many inputs is treated as a hub. |
 
-Lower `minScore` to see the long tail, including the weak evidence Braid would normally not bother
+Lower `minScore` to see the long tail, including the weak evidence Wallet Sleuth would normally not bother
 you with. Raise `clusterThreshold` when you would rather have several small confident clusters than
 one large chained one.
 
@@ -74,7 +74,7 @@ If A links to B above the threshold and B links to C above the threshold, all th
 cluster even when A and C never interacted. That is the correct reading when the linking evidence is
 about control, and it is why the clustering threshold sits well above the reporting threshold.
 
-The risk is a chain of merely-adequate links producing a large cluster nobody would defend. Braid
+The risk is a chain of merely-adequate links producing a large cluster nobody would defend. Wallet Sleuth
 makes that visible rather than hiding it: every cluster reports its **weakest link**, the lowest
 scoring edge holding it together. If a nine-address cluster has a weakest link of 56, you are looking
 at a chain, and you should say so.

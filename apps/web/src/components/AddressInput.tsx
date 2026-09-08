@@ -211,7 +211,7 @@ export function AddressInput({ chains, busy, maxAddresses, onSubmit, onCancel, i
           </div>
         </div>
         <p className="hint" style={{ marginTop: 10 }}>
-          Deeper history finds more, and costs more time against the public endpoints Braid uses by default.
+          Deeper history finds more, and costs more time against the public endpoints Wallet Sleuth uses by default.
         </p>
       </details>
 

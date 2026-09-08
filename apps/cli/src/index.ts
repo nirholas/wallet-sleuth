@@ -4,25 +4,25 @@ import {
   accountsToCsv,
   ALL_SIGNALS,
   analyze,
-  BraidError,
+  SleuthError,
   edgesToCsv,
   listChains,
   MAX_ADDRESSES,
   toGraphml,
   VERSION,
   type AnalysisOptions,
-} from '@braid/core';
+} from '@wallet-sleuth/core';
 import { flagList, flagNumber, flagString, parseArgs } from './args.js';
 import { renderReport, renderSignals } from './render.js';
 import { paint } from './theme.js';
 
 const USAGE = `
-  ${paint('braid', 'bold', 'cyan')} ${paint('- wallet linkage analysis for EVM and Solana', 'dim')}
+  ${paint('sleuth', 'bold', 'cyan')} ${paint('- wallet linkage analysis for EVM and Solana', 'dim')}
 
   ${paint('Usage', 'bold')}
-    braid analyze <address...> [options]
-    braid signals
-    braid chains
+    sleuth analyze <address...> [options]
+    sleuth signals
+    sleuth chains
 
   ${paint('Options', 'bold')}
     --chains <list>          Chains to search (default: the registry defaults)
@@ -42,12 +42,12 @@ const USAGE = `
     -h, --help               This message
 
   ${paint('Examples', 'bold')}
-    braid analyze 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --chains ethereum
-    braid analyze 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM 5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9 -v
-    cat wallets.txt | braid analyze --json --out report.json
+    sleuth analyze 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --chains ethereum
+    sleuth analyze 9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM 5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9 -v
+    cat wallets.txt | sleuth analyze --json --out report.json
 
   Addresses may be piped in on stdin. Progress goes to stderr, output to stdout.
-  Docs: https://github.com/braid-tools/braid
+  Docs: https://github.com/nirholas/wallet-sleuth
 `;
 
 async function readStdin(): Promise<string> {
@@ -137,7 +137,7 @@ async function main(): Promise<number> {
   const addresses = [...parsed.positionals, ...piped.split(/[\s,;]+/)].map((v) => v.trim()).filter(Boolean);
 
   if (addresses.length < 2) {
-    process.stderr.write(paint('braid needs at least two addresses to compare\n', 'red'));
+    process.stderr.write(paint('sleuth needs at least two addresses to compare\n', 'red'));
     return 1;
   }
   if (addresses.length > MAX_ADDRESSES) {
@@ -187,7 +187,7 @@ async function main(): Promise<number> {
 main()
   .then((code) => process.exit(code))
   .catch((err) => {
-    if (err instanceof BraidError) {
+    if (err instanceof SleuthError) {
       process.stderr.write(paint(`${err.code}: ${err.message}\n`, 'red'));
       if (err.details) process.stderr.write(paint(`${JSON.stringify(err.details, null, 2)}\n`, 'dim'));
       process.exit(1);

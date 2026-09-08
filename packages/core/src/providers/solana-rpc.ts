@@ -12,7 +12,7 @@ import type { ChainProvider, CollectOptions, FetchContext, ProviderActivity } fr
 const IMMUTABLE_TTL = 7 * 24 * 3600;
 
 /** How many requests to have in flight per endpoint. The scheduler still paces them. */
-const FANOUT = Number(process.env.BRAID_SOLANA_FANOUT ?? 6);
+const FANOUT = Number(process.env.SLEUTH_SOLANA_FANOUT ?? 6);
 
 /** Learned per-host caps, e.g. publicnode allows one getTransaction per batch and says so. */
 const BATCH_LIMITS = new Map<string, number>();

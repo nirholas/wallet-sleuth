@@ -1,11 +1,11 @@
-# @braid/api
+# @wallet-sleuth/api
 
-The Braid HTTP server. It exposes the analysis API, runs the job queue, and serves the built web
+The Wallet Sleuth HTTP server. It exposes the analysis API, runs the job queue, and serves the built web
 client from the same port.
 
 ```bash
-npm run build --workspace @braid/core
-npm run build --workspace @braid/api
+npm run build --workspace @wallet-sleuth/core
+npm run build --workspace @wallet-sleuth/api
 node apps/api/dist/server.js
 ```
 
@@ -34,7 +34,7 @@ is longer than most proxies will hold a connection open. Callers submit a job, w
 server-sent events, and collect the report when it lands. `wait: true` is available for scripts that
 would rather block.
 
-Jobs live in memory in the process that ran them and are dropped after `BRAID_JOB_RETENTION_MS`
+Jobs live in memory in the process that ran them and are dropped after `SLEUTH_JOB_RETENTION_MS`
 (one hour by default). Behind a load balancer, either pin sessions or use `wait: true`.
 
 ## Configuration
@@ -42,7 +42,7 @@ Jobs live in memory in the process that ran them and are dropped after `BRAID_JO
 Every variable is optional; the server runs with an empty environment. The full table is in
 [docs/self-hosting.md](../../docs/self-hosting.md). The ones that matter most:
 
-- `BRAID_API_KEYS` turns on bearer authentication for `/v1`.
-- `BRAID_RATE_LIMIT` and `BRAID_ANALYZE_RATE_LIMIT` bound general and analysis traffic.
+- `SLEUTH_API_KEYS` turns on bearer authentication for `/v1`.
+- `SLEUTH_RATE_LIMIT` and `SLEUTH_ANALYZE_RATE_LIMIT` bound general and analysis traffic.
 - `REDIS_URL` shares the provider cache across instances.
 - `ETHERSCAN_API_KEY` and `HELIUS_API_KEY` make collection much faster.

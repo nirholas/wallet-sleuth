@@ -1,5 +1,5 @@
 {
-  "name": "@braid/core",
+  "name": "@wallet-sleuth/core",
   "version": "1.0.0",
   "description": "Linkage analysis engine: providers, signals, scoring and clustering for EVM and Solana addresses.",
   "license": "MIT",

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Braid are recorded here. The format follows
+All notable changes to Wallet Sleuth are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -10,7 +10,7 @@ First release.
 
 ### Added
 
-- **Linkage engine** (`@braid/core`) with fourteen signals across control, funding, flow, coactivity
+- **Linkage engine** (`@wallet-sleuth/core`) with fourteen signals across control, funding, flow, coactivity
   and behavioral categories, evidence-based scoring with noisy-OR combination, and union-find
   clustering with weakest-link reporting.
 - **EVM support** for Ethereum, Base, Arbitrum, OP Mainnet, Polygon, Gnosis, Scroll, ZKsync Era,
@@ -23,7 +23,7 @@ First release.
   optional bearer authentication, per-route rate limiting, and CSV, GraphML and JSON exports.
 - **Web client** with live progress, an interactive linkage graph, per-signal evidence with explorer
   links, and the full documentation set rendered from the repository's markdown.
-- **CLI** (`braid analyze`, `braid signals`, `braid chains`) with human, JSON, CSV and GraphML output.
+- **CLI** (`sleuth analyze`, `sleuth signals`, `sleuth chains`) with human, JSON, CSV and GraphML output.
 - **Adaptive provider transport**: per-host request pacing that widens on rate limits and narrows on
   success, endpoint health ranking, batch limits learned from the errors that declare them, per-item
   rate limits detected inside HTTP 200 responses, and cross-endpoint verification of any Solana

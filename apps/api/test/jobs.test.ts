@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AnalysisReport } from '@braid/core';
+import type { AnalysisReport } from '@wallet-sleuth/core';
 
 const analyzeMock = vi.hoisted(() => vi.fn());
 
-vi.mock('@braid/core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@braid/core')>();
+vi.mock('@wallet-sleuth/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@wallet-sleuth/core')>();
   return { ...actual, analyze: analyzeMock };
 });
 
 const { JobQueue, toView } = await import('../src/lib/jobs.js');
-const { NullCache } = await import('@braid/core');
+const { NullCache } = await import('@wallet-sleuth/core');
 
 function report(id: string): AnalysisReport {
   return {

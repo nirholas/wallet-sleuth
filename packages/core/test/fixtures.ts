@@ -6,7 +6,7 @@ import { makeRef } from '../src/address.js';
  *
  * These are inputs to pure functions, not stand-ins for chain data: nothing here is ever served to a
  * user or presented as a real transaction. The live provider behaviour is covered separately in
- * `test/live`, which runs against real endpoints when BRAID_LIVE is set.
+ * `test/live`, which runs against real endpoints when SLEUTH_LIVE is set.
  */
 export const A = '0x1111111111111111111111111111111111111111';
 export const B = '0x2222222222222222222222222222222222222222';

@@ -77,7 +77,7 @@ export function Analyze() {
           Are these wallets <span className="accent">the same person?</span>
         </h1>
         <p>
-          Paste public addresses from Ethereum, Base, Arbitrum, OP, Polygon or Solana. Braid reads their real
+          Paste public addresses from Ethereum, Base, Arbitrum, OP, Polygon or Solana. Wallet Sleuth reads their real
           on-chain history, looks for the fourteen ways addresses give each other away, and shows you the
           transactions behind every link it finds. No account, no API key, nothing stored.
         </p>
@@ -85,7 +85,7 @@ export function Analyze() {
 
       {bootError ? (
         <div className="callout callout-error">
-          <strong>The Braid API is not reachable.</strong> {bootError}
+          <strong>The Wallet Sleuth API is not reachable.</strong> {bootError}
         </div>
       ) : null}
 

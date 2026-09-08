@@ -16,7 +16,7 @@ export function Docs() {
   const active = findDoc(slug ?? 'start-here') ?? docs[0];
 
   useEffect(() => {
-    document.title = active ? `${active.title} - Braid docs` : 'Braid docs';
+    document.title = active ? `${active.title} - Wallet Sleuth docs` : 'Wallet Sleuth docs';
     window.scrollTo({ top: 0 });
   }, [active]);
 

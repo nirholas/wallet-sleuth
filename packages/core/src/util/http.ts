@@ -41,7 +41,7 @@ export async function fetchJson<T>(provider: string, url: string, options: HttpO
         method,
         headers: {
           accept: 'application/json',
-          'user-agent': 'braid/1.0 (+https://github.com/braid-tools/braid)',
+          'user-agent': 'sleuth/1.0 (+https://github.com/nirholas/wallet-sleuth)',
           ...(body ? { 'content-type': 'application/json' } : {}),
           ...headers,
         },

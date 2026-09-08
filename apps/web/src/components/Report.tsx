@@ -106,7 +106,7 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
           <div className="empty">
             <h3>No links above the reporting threshold</h3>
             <p>
-              Nothing in the history Braid read connects these addresses beyond what unrelated wallets share.
+              Nothing in the history Wallet Sleuth read connects these addresses beyond what unrelated wallets share.
               That is a real result, not a failure: lower the reporting threshold or raise the history depth in
               advanced settings to look harder, and check the caveats above for coverage gaps.
             </p>

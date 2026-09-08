@@ -22,7 +22,7 @@ export function App() {
         <NavLink to="/" className="brand">
           <Logo />
           <span>
-            Braid <small>wallet linkage</small>
+            Wallet Sleuth <small>on-chain linkage</small>
           </span>
         </NavLink>
         <nav className="nav">
@@ -49,12 +49,12 @@ export function App() {
 
       <footer className="footer">
         <span>
-          Braid reads public blockchain data only. It does not identify people, and a link is evidence to check,
+          Wallet Sleuth reads public blockchain data only. It does not identify people, and a link is evidence to check,
           not a verdict.
         </span>
         <span>
           <a href="/docs/privacy-and-ethics">Ethics</a> · <a href="/docs/interpreting-results">How to read a score</a>{' '}
-          · <a href="https://github.com/braid-tools/braid">Source</a>
+          · <a href="https://github.com/nirholas/wallet-sleuth">Source</a>
         </span>
       </footer>
     </div>

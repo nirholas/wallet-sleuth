@@ -14,7 +14,7 @@ export {
 export { addressUrl, chainByEvmId, chains, defaultChains, getChain, listChains, resolveChain, txUrl } from './chains.js';
 export { buildClusters, clusterLabel } from './cluster.js';
 export { collectBundles, enrichCounterparties, type ContextAccount } from './collect.js';
-export { BraidError, BudgetExceededError, InvalidInputError, ProviderError } from './errors.js';
+export { SleuthError, BudgetExceededError, InvalidInputError, ProviderError } from './errors.js';
 export { labels, LabelRegistry, resetLabels } from './labels/index.js';
 export { buildProviders, providersFor, BlockscoutProvider, EtherscanProvider, SolanaRpcProvider } from './providers/registry.js';
 export { StatsCollector, type ChainProvider, type CollectOptions, type FetchContext } from './providers/types.js';

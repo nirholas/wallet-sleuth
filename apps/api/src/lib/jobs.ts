@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { randomUUID } from 'node:crypto';
-import { analyze, type AnalysisReport, type AnalysisRequest, type CacheStore, type ProgressEvent } from '@braid/core';
+import { analyze, type AnalysisReport, type AnalysisRequest, type CacheStore, type ProgressEvent } from '@wallet-sleuth/core';
 
 export type JobStatus = 'queued' | 'running' | 'done' | 'failed' | 'cancelled';
 

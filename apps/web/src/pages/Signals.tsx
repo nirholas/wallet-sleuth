@@ -3,7 +3,7 @@ import { api } from '../lib/api';
 import type { SignalDoc } from '../lib/types';
 
 const CATEGORY_COPY: Record<string, string> = {
-  control: 'Evidence that one key can act for both addresses. The strongest class Braid has.',
+  control: 'Evidence that one key can act for both addresses. The strongest class Wallet Sleuth has.',
   funding: 'Evidence about where an address got its money, especially its first money.',
   flow: 'Evidence from value moving between the addresses or into the same place.',
   coactivity: 'Evidence from the company an address keeps.',
@@ -16,7 +16,7 @@ export function Signals() {
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    document.title = 'Signals - Braid';
+    document.title = 'Signals - Wallet Sleuth';
     void api
       .signals()
       .then((result) => setSignals(result.signals))
@@ -28,7 +28,7 @@ export function Signals() {
   return (
     <>
       <header className="hero">
-        <h1>What Braid looks for</h1>
+        <h1>What Wallet Sleuth looks for</h1>
         <p>
           Fourteen signals, each with a weight that reflects how hard it is to produce by accident. This page is
           generated from the running engine, so it always describes the version you are using.

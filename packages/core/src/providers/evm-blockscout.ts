@@ -57,14 +57,14 @@ interface V2Address {
 }
 
 function host(chain: ChainDescriptor): string {
-  const override = process.env[`BRAID_BLOCKSCOUT_${chain.slug.toUpperCase()}`];
+  const override = process.env[`SLEUTH_BLOCKSCOUT_${chain.slug.toUpperCase()}`];
   return (override || chain.blockscout || '').replace(/\/$/, '');
 }
 
 /**
  * Keyless EVM history from a Blockscout instance.
  *
- * This is the default provider: it needs no credentials, which is what makes Braid usable the
+ * This is the default provider: it needs no credentials, which is what makes Wallet Sleuth usable the
  * moment it is cloned. It prefers the Etherscan-compatible v1 API because that endpoint paginates
  * cheaply, and falls back to the v2 REST API on instances where v1 redirects to a hosted explorer.
  */

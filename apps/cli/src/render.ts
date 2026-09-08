@@ -1,4 +1,4 @@
-import { BANDS, shortAddress, type AnalysisReport, type LinkEdge } from '@braid/core';
+import { BANDS, shortAddress, type AnalysisReport, type LinkEdge } from '@wallet-sleuth/core';
 import { bandStyle, bar, paint } from './theme.js';
 
 function key(value: string): string {
@@ -11,7 +11,7 @@ export function renderReport(report: AnalysisReport, options: { verbose: boolean
   const out: string[] = [''];
   const { summary } = report;
 
-  out.push(`  ${paint('BRAID', 'bold', 'cyan')} ${paint(`linkage report ${report.id.slice(0, 8)}`, 'dim')}`);
+  out.push(`  ${paint('WALLET SLEUTH', 'bold', 'cyan')} ${paint(`linkage report ${report.id.slice(0, 8)}`, 'dim')}`);
   out.push(
     paint(
       `  ${summary.addresses} addresses  ${summary.transfersAnalyzed} transfers  ${summary.chains.join(', ')}  ${(
@@ -126,7 +126,7 @@ function renderEvidence(edge: LinkEdge): string[] {
   return out;
 }
 
-/** Signal catalogue, for `braid signals`. */
+/** Signal catalogue, for `sleuth signals`. */
 export function renderSignals(
   signals: { id: string; title: string; category: string; weight: number; namespaces?: string[]; description: string }[],
 ): string {

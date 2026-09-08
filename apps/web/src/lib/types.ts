@@ -1,7 +1,7 @@
 /**
  * The API contract as the browser sees it.
  *
- * Mirrors `@braid/core`'s report types deliberately: the web client talks to Braid only over HTTP,
+ * Mirrors `@wallet-sleuth/core`'s report types deliberately: the web client talks to Wallet Sleuth only over HTTP,
  * so it depends on the wire shape rather than on the engine build.
  */
 export type Band = 'none' | 'weak' | 'moderate' | 'strong' | 'confirmed';

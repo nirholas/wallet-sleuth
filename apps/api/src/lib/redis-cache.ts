@@ -1,10 +1,10 @@
 import { Redis } from 'ioredis';
-import type { CacheStore } from '@braid/core';
+import type { CacheStore } from '@wallet-sleuth/core';
 
 /**
  * Redis-backed provider cache.
  *
- * Several Braid instances behind a load balancer would otherwise each pay full price for the same
+ * Several Wallet Sleuth instances behind a load balancer would otherwise each pay full price for the same
  * upstream reads. Every failure path degrades to a miss rather than an error, because a cache that
  * can take the service down is worse than no cache.
  */
@@ -12,7 +12,7 @@ export class RedisCache implements CacheStore {
   private client: Redis;
   private healthy = true;
 
-  constructor(url: string, private readonly prefix = 'braid:') {
+  constructor(url: string, private readonly prefix = 'sleuth:') {
     this.client = new Redis(url, {
       maxRetriesPerRequest: 2,
       enableOfflineQueue: false,

@@ -1,4 +1,4 @@
-/** A tiny argument parser. Braid's CLI surface is small enough that a dependency would be noise. */
+/** A tiny argument parser. Wallet Sleuth's CLI surface is small enough that a dependency would be noise. */
 export interface ParsedArgs {
   command: string;
   positionals: string[];

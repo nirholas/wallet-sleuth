@@ -1,16 +1,16 @@
-# @braid/core
+# @wallet-sleuth/core
 
-The Braid linkage engine: providers, signals, scoring and clustering. Everything the HTTP API, the
+The Wallet Sleuth linkage engine: providers, signals, scoring and clustering. Everything the HTTP API, the
 CLI and the web client sit on top of.
 
 ```bash
-npm install @braid/core
+npm install @wallet-sleuth/core
 ```
 
 ## Usage
 
 ```ts
-import { analyze } from '@braid/core';
+import { analyze } from '@wallet-sleuth/core';
 
 const report = await analyze(
   {
@@ -55,7 +55,7 @@ it proves and how it can be wrong.
 **Providers.** `buildProviders`, `providersFor`, `BlockscoutProvider`, `EtherscanProvider`,
 `SolanaRpcProvider`, plus the `ChainProvider` interface for adding your own.
 
-**Labels.** `labels`, `LabelRegistry`, `resetLabels`. Extend with `BRAID_LABELS_FILE`.
+**Labels.** `labels`, `LabelRegistry`, `resetLabels`. Extend with `SLEUTH_LABELS_FILE`.
 
 **Exports.** `edgesToCsv`, `accountsToCsv`, `toGraphml`.
 

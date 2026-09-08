@@ -5,9 +5,9 @@ export default defineConfig({
     include: ['packages/*/test/**/*.test.ts', 'apps/*/test/**/*.test.ts', 'test/**/*.test.ts'],
     // Live tests hit real public endpoints. They are opt-in so the default suite is deterministic
     // and runs offline.
-    exclude: ['**/node_modules/**', '**/dist/**', ...(process.env.BRAID_LIVE ? [] : ['test/live/**'])],
+    exclude: ['**/node_modules/**', '**/dist/**', ...(process.env.SLEUTH_LIVE ? [] : ['test/live/**'])],
     environment: 'node',
-    testTimeout: process.env.BRAID_LIVE ? 300_000 : 15_000,
+    testTimeout: process.env.SLEUTH_LIVE ? 300_000 : 15_000,
     hookTimeout: 30_000,
     coverage: {
       provider: 'v8',

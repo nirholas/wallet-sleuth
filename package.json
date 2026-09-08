@@ -1,8 +1,8 @@
 {
-  "name": "braid",
+  "name": "wallet-sleuth",
   "version": "1.0.0",
   "private": true,
-  "description": "Wallet linkage analysis for EVM and Solana. Paste public addresses, get the evidence that ties them together.",
+  "description": "Wallet linkage analysis for EVM and Solana. Paste public addresses, get the on-chain evidence that ties them together.",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -13,22 +13,23 @@
     "apps/*"
   ],
   "scripts": {
-    "braid": "node apps/cli/dist/index.js",
-    "build": "npm run build --workspace @braid/core && npm run build --workspace @braid/api && npm run build --workspace @braid/cli && npm run build --workspace @braid/web",
+    "build": "npm run build --workspace @wallet-sleuth/core && npm run build --workspace @wallet-sleuth/api && npm run build --workspace @wallet-sleuth/cli && npm run build --workspace @wallet-sleuth/web",
     "check": "npm run lint && npm run typecheck && npm run test",
     "clean": "rm -rf packages/*/dist apps/*/dist apps/web/dist **/*.tsbuildinfo",
-    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev --workspace @braid/api\" \"npm run dev --workspace @braid/web\"",
-    "dev:api": "npm run dev --workspace @braid/api",
-    "dev:web": "npm run dev --workspace @braid/web",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev --workspace @wallet-sleuth/api\" \"npm run dev --workspace @wallet-sleuth/web\"",
+    "dev:api": "npm run dev --workspace @wallet-sleuth/api",
+    "dev:web": "npm run dev --workspace @wallet-sleuth/web",
     "docs:signals": "node scripts/generate-signal-docs.mjs",
     "format": "prettier --write .",
     "lint": "eslint .",
+    "sleuth": "node apps/cli/dist/index.js",
     "start": "node apps/api/dist/server.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:live": "BRAID_LIVE=1 vitest run test/live",
+    "test:live": "SLEUTH_LIVE=1 vitest run test/live",
     "test:watch": "vitest",
-    "typecheck": "tsc -b packages/core apps/api apps/cli && tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p apps/web"
+    "typecheck": "tsc -b packages/core apps/api apps/cli && tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p apps/web",
+    "wallet-sleuth": "node apps/cli/dist/index.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

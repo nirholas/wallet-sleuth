@@ -1,27 +1,27 @@
 /** Error classes that carry an HTTP status, so the API layer never has to guess. */
 
-export class BraidError extends Error {
+export class SleuthError extends Error {
   readonly status: number;
   readonly code: string;
   readonly details?: unknown;
 
   constructor(code: string, message: string, status = 500, details?: unknown) {
     super(message);
-    this.name = 'BraidError';
+    this.name = 'SleuthError';
     this.code = code;
     this.status = status;
     this.details = details;
   }
 }
 
-export class InvalidInputError extends BraidError {
+export class InvalidInputError extends SleuthError {
   constructor(message: string, details?: unknown) {
     super('invalid_input', message, 400, details);
     this.name = 'InvalidInputError';
   }
 }
 
-export class ProviderError extends BraidError {
+export class ProviderError extends SleuthError {
   readonly provider: string;
   readonly retryable: boolean;
 
@@ -33,7 +33,7 @@ export class ProviderError extends BraidError {
   }
 }
 
-export class BudgetExceededError extends BraidError {
+export class BudgetExceededError extends SleuthError {
   constructor(message = 'analysis budget exhausted') {
     super('budget_exceeded', message, 504);
     this.name = 'BudgetExceededError';

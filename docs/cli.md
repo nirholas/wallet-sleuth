@@ -9,13 +9,13 @@ npm run build
 node apps/cli/dist/index.js analyze 0xabc... 0xdef... --chains ethereum
 
 # or, once published
-npx braid analyze 0xabc... 0xdef...
+npx sleuth analyze 0xabc... 0xdef...
 ```
 
-## braid analyze
+## sleuth analyze
 
 ```
-braid analyze <address...> [options]
+sleuth analyze <address...> [options]
 
   --chains <list>        Comma separated chains to search (default: ethereum,base,arbitrum,optimism,polygon,solana)
   --depth <n>            Transfers to read per address (default 400)
@@ -36,16 +36,16 @@ braid analyze <address...> [options]
 Addresses may also be piped in:
 
 ```bash
-cat wallets.txt | braid analyze --chains ethereum --json > report.json
+cat wallets.txt | sleuth analyze --chains ethereum --json > report.json
 ```
 
 Progress goes to stderr and the report to stdout, so redirecting output never mixes the two.
 
-## braid signals
+## sleuth signals
 
 Prints the signal catalogue with weights and descriptions.
 
-## braid chains
+## sleuth chains
 
 Prints the chain registry.
 

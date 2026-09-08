@@ -1,15 +1,22 @@
 {
-  "name": "@braid/cli",
+  "name": "@wallet-sleuth/cli",
   "version": "1.0.0",
-  "description": "Command line interface for Braid wallet linkage analysis.",
+  "description": "Command line interface for Wallet Sleuth wallet linkage analysis.",
   "license": "MIT",
   "type": "module",
-  "bin": { "braid": "./dist/index.js" },
+  "bin": {
+    "sleuth": "./dist/index.js"
+  },
   "main": "./dist/index.js",
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -b && chmod +x dist/index.js",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
-  "dependencies": { "@braid/core": "1.0.0" }
+  "dependencies": {
+    "@wallet-sleuth/core": "1.0.0"
+  }
 }

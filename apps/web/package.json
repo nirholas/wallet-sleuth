@@ -1,7 +1,7 @@
 {
-  "name": "@braid/web",
+  "name": "@wallet-sleuth/web",
   "version": "1.0.0",
-  "description": "Braid web client: address input, live progress, linkage graph and evidence.",
+  "description": "Wallet Sleuth web client: address input, live progress, linkage graph and evidence.",
   "license": "MIT",
   "private": true,
   "type": "module",

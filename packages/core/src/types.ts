@@ -1,11 +1,11 @@
 /**
- * Wire and domain types for the Braid linkage engine.
+ * Wire and domain types for the Wallet Sleuth linkage engine.
  *
  * Everything the API returns is defined here, so the HTTP contract, the CLI output and the
  * web client all describe the same shapes.
  */
 
-/** Address namespaces Braid understands. */
+/** Address namespaces Wallet Sleuth understands. */
 export type Namespace = 'evm' | 'solana';
 
 /** Broad grouping used to explain *why* a signal counts, in the UI and in reports. */
@@ -14,7 +14,7 @@ export type SignalCategory = 'flow' | 'funding' | 'control' | 'coactivity' | 'be
 /** Confidence band derived from an edge score. */
 export type Band = 'none' | 'weak' | 'moderate' | 'strong' | 'confirmed';
 
-/** A chain Braid can read. */
+/** A chain Wallet Sleuth can read. */
 export interface ChainDescriptor {
   /** Stable slug used in the API and in address keys, e.g. `ethereum`, `base`, `solana`. */
   slug: string;
@@ -115,7 +115,7 @@ export interface AccountFacts {
   name?: string;
   /** Native balance in human units. */
   balance?: number;
-  /** Total transactions the provider reports, which may exceed what Braid fetched. */
+  /** Total transactions the provider reports, which may exceed what Wallet Sleuth fetched. */
   txCount?: number;
   /** Solana: set when the address is an SPL token account rather than a wallet. */
   solanaTokenAccount?: { owner: string; mint: string };
@@ -144,7 +144,7 @@ export interface EntityLabel {
   source: string;
 }
 
-/** The full activity sample Braid collected for one input address. */
+/** The full activity sample Wallet Sleuth collected for one input address. */
 export interface ActivityBundle {
   ref: AddressRef;
   facts: AccountFacts;
@@ -159,7 +159,7 @@ export interface ActivityBundle {
    * True when the sample reaches the account's very first transaction.
    *
    * The first-funding signals are only sound when this holds: on a truncated sample the earliest
-   * transfer Braid can see is an artefact of the budget, not the account's opening balance.
+   * transfer Wallet Sleuth can see is an artefact of the budget, not the account's opening balance.
    */
   reachedGenesis: boolean;
   warnings: string[];

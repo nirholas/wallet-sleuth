@@ -4,6 +4,6 @@ dist/
 .env
 .env.local
 coverage/
-.braid-cache/
+.sleuth-cache/
 *.log
 .DS_Store
