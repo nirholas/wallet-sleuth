@@ -1,30 +1,44 @@
 /* Wallet Sleuth design tokens. One dark scale, two accents, everything else derived. */
 :root {
-  --bg: #080a0f;
-  --bg-raised: #0d1117;
-  --bg-panel: #111820;
-  --bg-hover: #16202b;
-  --line: #1e2a36;
-  --line-strong: #2b3b4a;
+  /*
+   * Monochrome by rule. Black ground, white text, and a grey ramp for everything structural.
+   *
+   * Exactly two colours are allowed in the whole product, and they mean one thing each: green is
+   * value arriving, red is value leaving. Reserving colour for that single job is what makes it
+   * readable at a glance. The moment a cluster or a confidence band borrows a hue, direction stops
+   * being the thing colour tells you, so bands and clusters are encoded in the grey ramp instead.
+   */
+  --bg: #000000;
+  --bg-raised: #070707;
+  --bg-panel: #0e0e0e;
+  --bg-hover: #191919;
+  --line: #242424;
+  --line-strong: #3a3a3a;
 
-  --text: #e6edf3;
-  --text-muted: #93a4b3;
-  --text-faint: #64758a;
+  --text: #ffffff;
+  --text-muted: #a6a6a6;
+  --text-faint: #6e6e6e;
 
-  --accent: #5eead4;
-  --accent-dim: #2dd4bf22;
-  --violet: #a78bfa;
-  --pink: #f472b6;
+  /* The only two colours in the product. */
+  --in: #22c55e;
+  --out: #ef4444;
 
-  --band-confirmed: #f87171;
-  --band-strong: #fb923c;
-  --band-moderate: #fbbf24;
-  --band-weak: #64758a;
-  --ok: #4ade80;
+  /* Structural "accent" is simply white, so existing accent styling stays monochrome. */
+  --accent: #ffffff;
+  --accent-dim: rgba(255, 255, 255, 0.1);
+  --violet: #cfcfcf;
+  --pink: #8a8a8a;
+
+  /* Confidence bands ride the grey ramp: brighter means stronger. */
+  --band-confirmed: #ffffff;
+  --band-strong: #cfcfcf;
+  --band-moderate: #8f8f8f;
+  --band-weak: #5c5c5c;
+  --ok: #ffffff;
 
   --radius: 10px;
   --radius-sm: 6px;
-  --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -276,13 +290,13 @@ textarea {
   cursor: not-allowed;
 }
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #05201c;
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
 }
 .btn-primary:hover:not(:disabled) {
-  background: #7df0dc;
-  border-color: #7df0dc;
+  background: var(--text-muted);
+  border-color: var(--text-muted);
 }
 .btn-row {
   display: flex;
@@ -368,7 +382,7 @@ details.advanced[open] summary::before {
 .progress > span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--violet));
+  background: var(--text);
   transition: width 0.4s var(--ease);
 }
 
@@ -384,19 +398,19 @@ details.advanced[open] summary::before {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--text);
   box-shadow: 0 0 0 0 var(--accent-dim);
   animation: pulse 1.6s infinite;
 }
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.5);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(94, 234, 212, 0);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(94, 234, 212, 0);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -605,6 +619,25 @@ details.advanced[open] summary::before {
   margin-bottom: 10px;
 }
 
+/* Direction: the only colour in the product. Green is value in, red is value out. */
+.tone-in {
+  color: var(--in);
+}
+.tone-out {
+  color: var(--out);
+}
+.tone-in .arrow,
+.tone-out .arrow {
+  font-family: var(--mono);
+  margin-right: 3px;
+}
+.flow {
+  display: inline-flex;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
 /* Tables */
 table {
   width: 100%;
@@ -640,7 +673,7 @@ tbody tr:hover {
   height: 460px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: radial-gradient(circle at 50% 40%, #0e151d 0%, var(--bg) 70%);
+  background: radial-gradient(circle at 50% 40%, #101010 0%, var(--bg) 70%);
   overflow: hidden;
 }
 .graph-legend {
@@ -697,14 +730,16 @@ tbody tr:hover {
   margin-bottom: 12px;
 }
 .callout-warn {
-  border-color: #7c5a17;
-  background: #241c0a;
-  color: #f5d38a;
+  border-color: var(--line-strong);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  border-left: 3px solid var(--text-muted);
 }
 .callout-error {
-  border-color: #7f2b2b;
-  background: #240f0f;
-  color: #f6b4b4;
+  border-color: var(--out);
+  background: var(--bg-panel);
+  color: var(--text);
+  border-left: 3px solid var(--out);
 }
 .callout ul {
   margin: 6px 0 0;
@@ -755,7 +790,7 @@ tbody tr:hover {
 }
 .docs-nav a[aria-current='page'] {
   background: var(--bg-panel);
-  color: var(--accent);
+  color: var(--text);
 }
 .prose {
   max-width: 76ch;
@@ -784,7 +819,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 1px 5px;
-  color: var(--accent);
+  color: var(--text);
 }
 .prose pre {
   background: var(--bg-panel);
@@ -805,7 +840,7 @@ tbody tr:hover {
 .prose blockquote {
   margin: 12px 0;
   padding: 8px 14px;
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--line-strong);
   background: var(--bg-panel);
   color: var(--text-muted);
 }
@@ -831,10 +866,9 @@ tbody tr:hover {
   margin: 0;
 }
 .hero .accent {
-  background: linear-gradient(90deg, var(--accent), var(--violet));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--text);
+  border-bottom: 3px solid var(--line-strong);
+  padding-bottom: 2px;
 }
 
 .sr-only {

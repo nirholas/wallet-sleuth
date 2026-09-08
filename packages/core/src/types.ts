@@ -121,6 +121,14 @@ export interface AccountFacts {
   solanaTokenAccount?: { owner: string; mint: string };
   /** Solana: the account that paid rent to create this account, when it could be resolved. */
   rentPayer?: string;
+  /**
+   * True when the providers reported activity that none of them could actually serve.
+   *
+   * An address like this is not idle; it is unread. Any conclusion drawn from its absence of
+   * transfers, "no links" most of all, is unsupported, and the report says so rather than letting a
+   * coverage gap pass for a finding.
+   */
+  unreadable?: boolean;
   /** Label from the curated entity list, when the address is a known service. */
   label?: EntityLabel;
 }
@@ -174,6 +182,14 @@ export interface Observation {
   value: string;
   /** Explorer URL for the underlying transaction or address. */
   url?: string;
+  /**
+   * Direction of the value this observation describes, when it describes value at all.
+   *
+   * Clients render `in` and `out` differently because direction is the one thing about a transfer a
+   * reader should never have to parse out of a sentence. Everything else in a report is a judgement;
+   * this is a fact off the chain.
+   */
+  tone?: 'in' | 'out';
 }
 
 /** One reason to believe two addresses are related. */
@@ -242,9 +258,14 @@ export interface AccountSummary {
   firstActivity?: number;
   lastActivity?: number;
   counterparties: number;
+  /** Transfers into and out of this address within the analysed sample. */
+  inbound: number;
+  outbound: number;
   truncated: boolean;
   /** True when the sample reaches the account's first ever transaction. */
   historyComplete: boolean;
+  /** True when activity exists but no provider could serve it. Not the same as an idle address. */
+  unreadable: boolean;
   warnings: string[];
   explorerUrl: string;
   /** Cluster the account was assigned to, or null when it stands alone. */

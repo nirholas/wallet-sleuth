@@ -74,12 +74,13 @@ export function Analyze() {
     <>
       <header className="hero">
         <h1>
-          Are these wallets <span className="accent">the same person?</span>
+          How are these wallets <span className="accent">connected?</span>
         </h1>
         <p>
-          Paste public addresses from Ethereum, Base, Arbitrum, OP, Polygon or Solana. Wallet Sleuth reads their real
-          on-chain history, looks for the fourteen ways addresses give each other away, and shows you the
-          transactions behind every link it finds. No account, no API key, nothing stored.
+          Paste public addresses from Ethereum, Base, Arbitrum, OP, Polygon or Solana. Wallet Sleuth reads their
+          real on-chain history, runs fourteen linkage signals over it, and shows you the transactions behind
+          every connection it finds. It reports how addresses are related, never who owns them. No account, no
+          API key, nothing stored.
         </p>
       </header>
 

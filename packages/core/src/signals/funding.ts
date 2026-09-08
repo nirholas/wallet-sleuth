@@ -49,8 +49,9 @@ export const peerFunding: Signal = {
               { label: 'Funded address', value: funded.ref.address },
               { label: 'Funder', value: funder.ref.address },
               {
-                label: 'Amount',
+                label: 'Amount received',
                 value: formatAmount(opening.transfer.value, opening.transfer.asset.symbol ?? ''),
+                tone: 'in',
               },
               { label: 'When', value: formatTimestamp(opening.transfer.ts) },
             ],

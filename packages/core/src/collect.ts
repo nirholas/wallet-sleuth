@@ -86,6 +86,12 @@ export async function collectBundles(
           }
         }
 
+        // A signature index that lists activity while no transfer could be decoded is a coverage
+        // failure, not an idle account, and the difference decides whether "no links" means anything.
+        if (bundle.transfers.length === 0 && bundle.warnings.length > 0) {
+          bundle.facts.unreadable = true;
+        }
+
         const inbound = bundle.transfers
           .filter((t) => t.to === ref.normalized && t.value > 0 && t.success)
           .sort((a, b) => a.ts - b.ts);

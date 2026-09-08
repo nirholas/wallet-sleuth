@@ -126,3 +126,24 @@ describe('bundle assembly', () => {
     expect(result.bundles[0]!.reachedGenesis).toBe(false);
   });
 });
+
+describe('unreadable addresses', () => {
+  it('marks an address whose activity exists but could not be served', async () => {
+    // The failure this guards against: public Solana RPCs prune old slots, so getTransaction
+    // returns null for signatures the address index still lists. Reporting that as an idle address
+    // turns a coverage gap into a finding.
+    const pruned = new StubProvider('pruned', 10, async () => ({
+      ...EMPTY,
+      transfers: [],
+      warnings: ['40 of 40 transactions could not be read back: the endpoints do not retain that history'],
+    }));
+    const result = await collectBundles([makeRef('ethereum', A)], OPTIONS, context(), [pruned]);
+    expect(result.bundles[0]!.facts.unreadable).toBe(true);
+  });
+
+  it('does not mark a genuinely idle address as unreadable', async () => {
+    const quiet = new StubProvider('quiet', 10, async () => EMPTY);
+    const result = await collectBundles([makeRef('ethereum', A)], OPTIONS, context(), [quiet]);
+    expect(result.bundles[0]!.facts.unreadable).toBeUndefined();
+  });
+});

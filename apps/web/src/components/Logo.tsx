@@ -11,9 +11,9 @@ export function Logo() {
         <path d="M8 21 L15 12 L24 17" />
         <path d="M8 21 L24 17" />
       </g>
-      <circle cx="8" cy="21" r="2.4" fill="var(--violet)" />
-      <circle cx="24" cy="17" r="2.4" fill="var(--pink)" />
-      <circle cx="15" cy="12" r="2.4" fill="var(--accent)" />
+      <circle cx="8" cy="21" r="2.4" fill="var(--text-muted)" />
+      <circle cx="24" cy="17" r="2.4" fill="var(--text-faint)" />
+      <circle cx="15" cy="12" r="2.4" fill="var(--text)" />
       <g fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
         <circle cx="14" cy="14" r="7.5" />
         <path d="M19.6 19.6 L26 26" />

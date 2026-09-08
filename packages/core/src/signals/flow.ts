@@ -65,11 +65,29 @@ export const directTransfer: Signal = {
               }. ${dustOnly ? 'Every transfer is dust sized, which is consistent with address poisoning rather than ownership.' : ''}`.trim(),
           observations: [
             { label: 'Transfers', value: String(all.length) },
-            { label: 'Largest', value: formatAmount(largest.value, assetLabel(largest)) },
+            {
+              label: `Largest, ${largest.from === left.ref.normalized ? 'sent by' : 'received by'} ${left.ref.address.slice(0, 10)}`,
+              value: formatAmount(largest.value, assetLabel(largest)),
+              tone: largest.from === left.ref.normalized ? 'out' : 'in',
+            },
+            {
+              label: `Sent by ${left.ref.address.slice(0, 10)}`,
+              value: String(forward.length),
+              tone: 'out',
+            },
+            {
+              label: `Received by ${left.ref.address.slice(0, 10)}`,
+              value: String(backward.length),
+              tone: 'in',
+            },
             { label: 'Most recent', value: formatTimestamp(latest.ts) },
-            { label: 'Direction', value: bidirectional ? 'bidirectional' : 'one way' },
           ],
-          references: all.slice(0, 5).map((t, i) => txRef(t, `Transfer ${i + 1}`)),
+          references: all
+            .slice(0, 5)
+            .map((t, i) => ({
+              ...txRef(t, `Transfer ${i + 1}`),
+              tone: (t.from === left.ref.normalized ? 'out' : 'in') as 'in' | 'out',
+            })),
           lastSeen: latest.ts,
         }),
       );

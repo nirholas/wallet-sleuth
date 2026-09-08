@@ -357,14 +357,28 @@ export class SolanaRpcProvider implements ChainProvider {
       (count) => warnings.push(`${count} transaction(s) could not be read from any configured Solana RPC`),
     );
 
+    let unresolved = 0;
     await Promise.all(
       fetched.map(async (transaction, i) => {
         const signature = misses[i] as string;
-        if (!transaction) return;
+        if (!transaction) {
+          unresolved += 1;
+          return;
+        }
         out.set(signature, transaction);
         await ctx.cache.set(`sol:tx:${signature}`, JSON.stringify(transaction), IMMUTABLE_TTL);
       }),
     );
+
+    // Every signature here came from the address index, so the transaction certainly existed. A node
+    // answering with null is telling us it no longer holds that slot: public Solana RPCs prune to a
+    // couple of days and are not archival. Left unsaid, this reads as an address that never
+    // transacted, which is the most misleading thing this tool could report.
+    if (unresolved > 0) {
+      warnings.push(
+        `${unresolved} of ${misses.length} transactions could not be read back: the configured Solana RPC endpoints do not retain history that far back. Point SOLANA_RPC_URLS or HELIUS_API_KEY at an archival node to read this account's older activity.`,
+      );
+    }
 
     return out;
   }

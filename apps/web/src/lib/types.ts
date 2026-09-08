@@ -12,6 +12,8 @@ export interface Observation {
   label: string;
   value: string;
   url?: string;
+  /** Direction of the value described. The only thing colour is spent on in this product. */
+  tone?: 'in' | 'out';
 }
 
 export interface Evidence {
@@ -72,8 +74,11 @@ export interface AccountSummary {
   firstActivity?: number;
   lastActivity?: number;
   counterparties: number;
+  inbound: number;
+  outbound: number;
   truncated: boolean;
   historyComplete: boolean;
+  unreadable: boolean;
   warnings: string[];
   explorerUrl: string;
   cluster: string | null;

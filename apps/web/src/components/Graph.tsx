@@ -3,14 +3,22 @@ import cytoscape, { type Core, type ElementDefinition } from 'cytoscape';
 import { labelKey, splitKey } from '../lib/format';
 import type { AnalysisReport } from '../lib/types';
 
-const CLUSTER_COLORS = ['#5eead4', '#a78bfa', '#f472b6', '#fbbf24', '#60a5fa', '#34d399', '#fb923c'];
+/**
+ * Clusters are told apart by brightness, not by hue.
+ *
+ * Colour in this product means one thing, the direction value moved, so a cluster palette would
+ * spend the only signal colour carries on something that is not about value at all. Brightness plus
+ * the service diamond carries the same information without that cost.
+ */
+const CLUSTER_SHADES = ['#ffffff', '#c9c9c9', '#9a9a9a', '#787878', '#5e5e5e', '#4a4a4a', '#3a3a3a'];
 
+/** Confidence bands ride the same ramp: brighter is stronger. */
 const BAND_COLOR: Record<string, string> = {
-  confirmed: '#f87171',
-  strong: '#fb923c',
-  moderate: '#fbbf24',
-  weak: '#3f5163',
-  none: '#2b3b4a',
+  confirmed: '#ffffff',
+  strong: '#cfcfcf',
+  moderate: '#8f8f8f',
+  weak: '#5c5c5c',
+  none: '#3a3a3a',
 };
 
 interface Props {
@@ -38,8 +46,8 @@ export function Graph({ report, selected, onSelect }: Props) {
         id: account.key,
         label: labelKey(account.key),
         color: account.cluster
-          ? (CLUSTER_COLORS[(clusterIndex.get(account.cluster) ?? 0) % CLUSTER_COLORS.length] as string)
-          : '#4b5b6b',
+          ? (CLUSTER_SHADES[(clusterIndex.get(account.cluster) ?? 0) % CLUSTER_SHADES.length] as string)
+          : '#3a3a3a',
         size: 20 + Math.min(26, Math.sqrt(account.transfersAnalyzed + 1) * 2.2),
         service: account.label ? 1 : 0,
       },
@@ -71,20 +79,20 @@ export function Graph({ report, selected, onSelect }: Props) {
             width: 'data(size)',
             height: 'data(size)',
             label: 'data(label)',
-            color: '#93a4b3',
+            color: '#a6a6a6',
             'font-size': 9,
             'font-family': 'ui-monospace, monospace',
             'text-valign': 'bottom',
             'text-margin-y': 5,
             'border-width': 2,
-            'border-color': '#080a0f',
+            'border-color': '#000000',
             'transition-property': 'border-color, background-color',
             'transition-duration': 150,
           },
         },
         {
           selector: 'node[service = 1]',
-          style: { 'border-color': '#fbbf24', 'border-width': 2, shape: 'round-diamond' },
+          style: { 'border-color': '#ffffff', 'border-width': 3, shape: 'round-diamond' },
         },
         {
           selector: 'edge',
@@ -95,14 +103,14 @@ export function Graph({ report, selected, onSelect }: Props) {
             opacity: 0.75,
             label: 'data(score)',
             'font-size': 8,
-            color: '#64758a',
-            'text-background-color': '#080a0f',
+            color: '#8f8f8f',
+            'text-background-color': '#000000',
             'text-background-opacity': 0.85,
             'text-background-padding': '2px',
           },
         },
         { selector: 'edge[dashed = 1]', style: { 'line-style': 'dashed' } },
-        { selector: 'edge.selected', style: { opacity: 1, width: 'data(width)', 'line-color': '#5eead4' } },
+        { selector: 'edge.selected', style: { opacity: 1, width: 'data(width)', 'line-color': '#ffffff' } },
         { selector: 'node.dim, edge.dim', style: { opacity: 0.15 } },
       ],
       layout: {
@@ -162,6 +170,7 @@ export function Graph({ report, selected, onSelect }: Props) {
         </span>
         <span>dashed = cross chain</span>
         <span>diamond = known service</span>
+        <span>brightness = cluster</span>
       </div>
     </div>
   );

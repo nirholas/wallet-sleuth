@@ -246,7 +246,7 @@ export const gasFunding: Signal = {
             observations: [
               { label: 'Sponsor', value: sponsor.ref.address },
               { label: 'Recipient', value: funded.ref.address },
-              { label: 'Top-ups', value: String(transfers.length) },
+              { label: 'Top-ups received', value: String(transfers.length), tone: 'in' },
               { label: 'Most recent', value: formatTimestamp(latest.ts) },
             ],
             references: transfers.slice(0, 4).map((t, i) => txRef(t, `Top-up ${i + 1}`)),

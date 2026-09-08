@@ -164,6 +164,7 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
                 <th>Chain</th>
                 <th>Cluster</th>
                 <th>Transfers</th>
+                <th>In / Out</th>
                 <th>Counterparties</th>
                 <th>Active</th>
                 <th>Coverage</th>
@@ -181,11 +182,25 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
                   <td>{account.chain}</td>
                   <td>{account.cluster ?? '-'}</td>
                   <td>{account.transfersAnalyzed}</td>
+                  <td>
+                    <span className="flow">
+                      <span className="tone-in" title="transfers received">
+                        <span className="arrow">+</span>
+                        {account.inbound}
+                      </span>
+                      <span className="tone-out" title="transfers sent">
+                        <span className="arrow">-</span>
+                        {account.outbound}
+                      </span>
+                    </span>
+                  </td>
                   <td>{account.counterparties}</td>
                   <td className="mono" style={{ whiteSpace: 'nowrap' }}>
                     {when(account.firstActivity)} to {when(account.lastActivity)}
                   </td>
-                  <td>{account.historyComplete ? 'full history' : 'sample'}</td>
+                  <td className={account.unreadable ? 'tone-out' : undefined}>
+                    {account.unreadable ? 'unread' : account.historyComplete ? 'full history' : 'sample'}
+                  </td>
                   <td>
                     <div className="chip-row" style={{ margin: 0, alignItems: 'center' }}>
                       {account.label ? <span className="chip">{account.label.name}</span> : null}
@@ -196,6 +211,11 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
                           title="EIP-7702 delegated account: an externally owned account with code, not a contract"
                         >
                           7702 account
+                        </span>
+                      ) : null}
+                      {account.unreadable ? (
+                        <span className="chip tone-out" title={account.warnings.join(' ')}>
+                          no provider could serve this history
                         </span>
                       ) : null}
                       {account.balance !== undefined ? (
@@ -310,8 +330,13 @@ function EvidenceBlock({ evidence }: { evidence: Evidence }) {
       {evidence.observations.length > 0 ? (
         <div className="obs">
           {evidence.observations.map((observation) => (
-            <span key={`${observation.label}-${observation.value}`}>
-              <b>{observation.label}:</b> {observation.value}
+            <span
+              key={`${observation.label}-${observation.value}`}
+              className={observation.tone ? `tone-${observation.tone}` : undefined}
+            >
+              <b>{observation.label}:</b>{' '}
+              {observation.tone ? <span className="arrow">{observation.tone === 'in' ? '+' : '-'}</span> : null}
+              {observation.value}
             </span>
           ))}
         </div>
@@ -324,7 +349,10 @@ function EvidenceBlock({ evidence }: { evidence: Evidence }) {
               href={reference.url ?? '#'}
               target="_blank"
               rel="noreferrer noopener"
+              className={reference.tone ? `tone-${reference.tone}` : undefined}
+              title={reference.tone === 'out' ? 'value sent' : reference.tone === 'in' ? 'value received' : undefined}
             >
+              {reference.tone ? <span className="arrow">{reference.tone === 'in' ? '+' : '-'}</span> : null}
               {reference.label} &#8599;
             </a>
           ))}

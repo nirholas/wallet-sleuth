@@ -1,6 +1,6 @@
 # Start here
 
-Wallet Sleuth answers one question: **do these wallet addresses belong together?**
+Wallet Sleuth answers one question: **how are these addresses connected?**
 
 You give it a list of public addresses, on any mix of supported EVM chains and Solana. It reads their
 real on-chain history, runs fourteen linkage signals over that history, and returns a score for every

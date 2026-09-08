@@ -159,8 +159,11 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
       firstActivity: timestamps.length > 0 ? Math.min(...timestamps) : undefined,
       lastActivity: timestamps.length > 0 ? Math.max(...timestamps) : undefined,
       counterparties: signalContext.index.get(bundle.ref.key)?.counterparties.size ?? 0,
+      inbound: signalContext.index.get(bundle.ref.key)?.inbound.length ?? 0,
+      outbound: signalContext.index.get(bundle.ref.key)?.outbound.length ?? 0,
       truncated: bundle.truncated,
       historyComplete: bundle.reachedGenesis,
+      unreadable: bundle.facts.unreadable === true,
       warnings: bundle.warnings,
       explorerUrl: addressUrl(bundle.ref.chain, bundle.ref.address),
       cluster: clusterByKey.get(bundle.ref.key) ?? null,
@@ -202,6 +205,17 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
       `the ${Math.round(options.budgetMs / 1000)}s collection budget was reached, so some history was not read; raise budgetMs or narrow the address list for a deeper pass`,
     );
   }
+  // The loudest caveat there is: a "no links" result computed over an address nobody could read is
+  // not a finding about that address, and the report must not let it pass for one.
+  const unreadable = accounts.filter((account) => account.unreadable);
+  if (unreadable.length > 0) {
+    warnings.push(
+      `${unreadable
+        .map((account) => account.address)
+        .join(', ')}: activity exists on chain but no configured provider could serve it, so nothing was analysed for ${unreadable.length === 1 ? 'this address' : 'these addresses'}. Any conclusion about ${unreadable.length === 1 ? 'it' : 'them'}, including the absence of links, is unsupported until a provider that holds this history is configured.`,
+    );
+  }
+
   const labelledInputs = accounts.filter((account) => account.label?.hub);
   if (labelledInputs.length > 0) {
     warnings.push(
