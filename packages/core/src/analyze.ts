@@ -22,8 +22,8 @@ import type {
 
 export const VERSION = '1.0.0';
 
-/** Licence and source, so the AGPL's network clause is answerable from the API itself. */
-export const LICENSE = 'AGPL-3.0-or-later';
+/** Licence and canonical repository, reported by the API and the CLI so a deployment identifies itself. */
+export const LICENSE = 'Proprietary, all rights reserved';
 export const SOURCE_URL = 'https://github.com/nirholas/wallet-sleuth';
 
 /** Defaults tuned to finish inside a minute on keyless public endpoints. */

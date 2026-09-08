@@ -2,7 +2,7 @@
   "name": "@wallet-sleuth/core",
   "version": "1.0.0",
   "description": "Linkage analysis engine: providers, signals, scoring and clustering for EVM and Solana addresses.",
-  "license": "AGPL-3.0-or-later",
+  "license": "UNLICENSED",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,10 +16,6 @@
       "default": "./dist/types.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist *.tsbuildinfo"
@@ -29,5 +25,6 @@
     "bs58": "^6.0.0",
     "lru-cache": "^11.0.2",
     "p-limit": "^6.2.0"
-  }
+  },
+  "private": true
 }

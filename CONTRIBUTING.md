@@ -64,12 +64,19 @@ point at, and prefer being conservative: a wrong label silently suppresses real 
 
 `type(scope): what changed and why a reader would care.` Present tense, specific to the change.
 
-## Licensing of contributions
+## Contributions and licensing
 
-Wallet Sleuth is licensed under the [GNU AGPL v3 or later](LICENSE). Contributions are accepted on
-the same terms: by opening a pull request you agree your work is licensed under the AGPL, inbound
-matching outbound. There is no CLA and no copyright assignment.
+Wallet Sleuth is proprietary; see [LICENSE](LICENSE). The repository is public so the behaviour can
+be inspected, not to invite general contribution.
 
-If you add a new entry point, carry the licence notice at the top of the file the way
-`apps/api/src/server.ts` does. If you change what the deployed service does, remember that the
-network clause means whoever you serve it to can read the source of what they are being served.
+**Bug reports are genuinely welcome**, especially about correctness: a signal that can be cheaply
+spoofed, a provider quirk that makes results wrong, a false positive with a mundane explanation. Open
+an issue. Reports of that kind are the reason the source is readable at all.
+
+**Pull requests are accepted only by prior arrangement.** Because the project is not open source,
+merging outside code needs an explicit assignment of rights in the contribution to the copyright
+holder. Ask in an issue before writing anything substantial, so nobody spends an evening on work that
+cannot be taken.
+
+If you want to use, deploy, or build on this, that is a licensing conversation rather than a pull
+request. Open an issue.

@@ -2,7 +2,7 @@
   "name": "@wallet-sleuth/api",
   "version": "1.0.0",
   "description": "HTTP API and web host for Wallet Sleuth.",
-  "license": "AGPL-3.0-or-later",
+  "license": "UNLICENSED",
   "type": "module",
   "main": "./dist/server.js",
   "scripts": {
@@ -22,5 +22,6 @@
     "fastify": "^5.2.0",
     "ioredis": "^5.4.2",
     "zod": "^3.24.1"
-  }
+  },
+  "private": true
 }

@@ -78,13 +78,13 @@ browser on another origin genuinely needs access, and put it behind TLS. Wallet 
 Content-Security-Policy when it is serving the web client. It makes outbound requests only to the
 configured providers.
 
-## Licence obligations when you host it
+## Before you host it
 
-Wallet Sleuth is AGPL v3 or later. Running it, modified or not, for yourself or for other people,
-commercially or not, is fine. The one obligation the AGPL adds is the network clause: **if you serve
-a modified version to other people, those people must be able to get your modified source.**
+Wallet Sleuth is proprietary software, all rights reserved. Running or deploying it, for yourself or
+for anyone else, requires written permission from the copyright holder. The instructions above exist
+because they are part of understanding what the software does and because licensed deployments need
+them, not as a grant of permission to run it.
 
-Running it unmodified obliges you to nothing beyond leaving the notices in place. The bundled
-client already links to the upstream source and `GET /v1/version` reports the licence and source
-URL, so an unmodified deployment satisfies the clause out of the box. If you modify it, point those
-two at your fork.
+If you want a licence, open an issue at
+<https://github.com/nirholas/wallet-sleuth>. See [LICENSE](../LICENSE) for the full terms and
+[THIRD-PARTY-NOTICES.md](../THIRD-PARTY-NOTICES.md) for the open source components it builds on.

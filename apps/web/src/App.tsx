@@ -55,9 +55,8 @@ export function App() {
         <span>
           <a href="/docs/privacy-and-ethics">Ethics</a> · <a href="/docs/interpreting-results">How to read a score</a>{' '}
           ·{' '}
-          <a href="https://github.com/nirholas/wallet-sleuth">
-            Source (AGPL v3)
-          </a>
+          <a href="https://github.com/nirholas/wallet-sleuth">Source</a> ·{' '}
+          <span>&copy; 2026 nirholas. All rights reserved.</span>
         </span>
       </footer>
     </div>

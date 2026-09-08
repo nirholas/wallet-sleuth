@@ -2,21 +2,18 @@
   "name": "@wallet-sleuth/cli",
   "version": "1.0.0",
   "description": "Command line interface for Wallet Sleuth wallet linkage analysis.",
-  "license": "AGPL-3.0-or-later",
+  "license": "UNLICENSED",
   "type": "module",
   "bin": {
     "sleuth": "./dist/index.js"
   },
   "main": "./dist/index.js",
-  "files": [
-    "dist",
-    "README.md"
-  ],
   "scripts": {
     "build": "tsc -b && chmod +x dist/index.js",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {
     "@wallet-sleuth/core": "1.0.0"
-  }
+  },
+  "private": true
 }

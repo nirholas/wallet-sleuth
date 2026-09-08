@@ -77,8 +77,6 @@ export function registerAnalysisRoutes(app: FastifyInstance, queue: JobQueue, an
     },
     async () => ({
       version: VERSION,
-      // The AGPL requires that anyone using this over a network can obtain its source. Answering
-      // that from the API means the offer travels with the deployment, not just with the README.
       license: LICENSE,
       source: SOURCE_URL,
       maxAddresses: MAX_ADDRESSES,

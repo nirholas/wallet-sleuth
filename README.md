@@ -152,13 +152,12 @@ shows its evidence so a claim can be checked rather than trusted. Please read
 
 ## License
 
-[GNU AGPL v3 or later](LICENSE).
+**Proprietary. All rights reserved.** See [LICENSE](LICENSE).
 
-You can run it, read it, change it and self-host it, commercially or not. The one obligation the
-AGPL adds over a permissive licence is the network clause: if you run a modified version where other
-people can use it, those people must be able to get your modified source. Running it unmodified,
-internally or publicly, obliges you to nothing beyond keeping the notices intact.
+The source is public so that the behaviour behind a score can be inspected and checked. That is the
+whole point of a tool whose output is used to make claims about people: a number you cannot audit is
+not a finding. Publishing it does not make it open source, and no licence to use, deploy, modify, or
+redistribute it is granted. For a licence, open an issue.
 
-That choice is deliberate for this tool in particular. A chain analysis engine that quietly diverges
-from its published behaviour is worse than useless, because its output is used to make claims about
-people. The AGPL means the version being served is always a version anyone can audit.
+Third party dependencies remain under their own licences: see
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
