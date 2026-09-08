@@ -115,7 +115,7 @@ export function Analyze() {
 
           {busy && job ? <Progress job={job} /> : null}
           {busy ? <ReportSkeleton /> : null}
-          {report ? <Report report={report} /> : null}
+          {report ? <Report report={report} chains={chains} /> : null}
 
           {!busy && !report && !error ? (
             <div className="panel">

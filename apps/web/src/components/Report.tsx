@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '../lib/api';
 import { amount, bandClass, duration, labelKey, splitKey, when } from '../lib/format';
-import type { AnalysisReport, Evidence, LinkEdge } from '../lib/types';
+import type { AnalysisReport, ChainDescriptor, Evidence, LinkEdge } from '../lib/types';
 import { Graph } from './Graph';
 
 const BAND_MEANING: Record<string, string> = {
@@ -12,8 +12,11 @@ const BAND_MEANING: Record<string, string> = {
   none: 'Nothing beyond what unrelated addresses share.',
 };
 
-export function Report({ report }: { report: AnalysisReport }) {
+export function Report({ report, chains = [] }: { report: AnalysisReport; chains?: ChainDescriptor[] }) {
   const [selectedEdge, setSelectedEdge] = useState<string | undefined>();
+  // Native symbols come from the running engine's chain registry rather than a copy in the client,
+  // so adding a chain in one place is enough.
+  const nativeSymbol = (chain: string) => chains.find((entry) => entry.slug === chain)?.nativeSymbol ?? '';
 
   return (
     <>
@@ -184,18 +187,23 @@ export function Report({ report }: { report: AnalysisReport }) {
                   </td>
                   <td>{account.historyComplete ? 'full history' : 'sample'}</td>
                   <td>
-                    {account.label ? <span className="chip">{account.label.name}</span> : null}
-                    {account.isContract ? <span className="chip">contract</span> : null}
-                    {account.delegated ? (
-                      <span className="chip" title="EIP-7702 delegated account: an EOA with code, not a contract">
-                        7702 account
-                      </span>
-                    ) : null}
-                    {account.balance !== undefined ? (
-                      <span className="hint" style={{ margin: 0 }}>
-                        {amount(account.balance)}
-                      </span>
-                    ) : null}
+                    <div className="chip-row" style={{ margin: 0, alignItems: 'center' }}>
+                      {account.label ? <span className="chip">{account.label.name}</span> : null}
+                      {account.isContract ? <span className="chip">contract</span> : null}
+                      {account.delegated ? (
+                        <span
+                          className="chip"
+                          title="EIP-7702 delegated account: an externally owned account with code, not a contract"
+                        >
+                          7702 account
+                        </span>
+                      ) : null}
+                      {account.balance !== undefined ? (
+                        <span className="hint" style={{ margin: 0 }} title="Native balance">
+                          {amount(account.balance)} {nativeSymbol(account.chain)}
+                        </span>
+                      ) : null}
+                    </div>
                   </td>
                 </tr>
               ))}

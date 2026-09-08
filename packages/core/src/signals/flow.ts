@@ -6,6 +6,18 @@ import { addressRef, makeEvidence, pairs, txRef, type Signal, type SignalContext
 const YEAR = 365 * 24 * 3600;
 
 /**
+ * How to name the asset in evidence text.
+ *
+ * Solana mints carry no symbol in a transaction, and printing the literal word "token" tells a
+ * reader nothing they can check. The mint address is at least something they can look up.
+ */
+function assetLabel(transfer: Transfer): string {
+  if (transfer.asset.symbol) return transfer.asset.symbol;
+  if (transfer.asset.address) return `of ${transfer.asset.address.slice(0, 8)}...`;
+  return '';
+}
+
+/**
  * The plainest link there is: value moved from one input address to the other.
  *
  * Strength rises with how many times it happened and how recently, and falls when the only contact
@@ -53,10 +65,7 @@ export const directTransfer: Signal = {
               }. ${dustOnly ? 'Every transfer is dust sized, which is consistent with address poisoning rather than ownership.' : ''}`.trim(),
           observations: [
             { label: 'Transfers', value: String(all.length) },
-            {
-              label: 'Largest',
-              value: formatAmount(largest.value, largest.asset.symbol ?? largest.asset.kind),
-            },
+            { label: 'Largest', value: formatAmount(largest.value, assetLabel(largest)) },
             { label: 'Most recent', value: formatTimestamp(latest.ts) },
             { label: 'Direction', value: bidirectional ? 'bidirectional' : 'one way' },
           ],
