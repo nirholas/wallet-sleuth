@@ -79,6 +79,7 @@ export interface AccountSummary {
   truncated: boolean;
   historyComplete: boolean;
   unreadable: boolean;
+  sanctioned: boolean;
   warnings: string[];
   explorerUrl: string;
   cluster: string | null;
@@ -120,6 +121,7 @@ export interface FlowNode {
   label?: string;
   service?: string;
   isContract: boolean;
+  sanctioned: boolean;
   cluster: string | null;
   usdIn: number;
   usdOut: number;
@@ -146,6 +148,7 @@ export interface FlowGraph {
   totalUsd: number;
   unpricedAssets: string[];
   trimmed: boolean;
+  sanctionedNodes: string[];
 }
 
 export interface AnalysisReport {
@@ -211,4 +214,21 @@ export interface ParseResult {
   rejected: { input: string; reason: string }[];
   flow: FlowGraph;
   distinctInputs: number;
+}
+
+export interface ExpandResult {
+  chain: string;
+  address: string;
+  flow: FlowGraph;
+  facts: {
+    label?: string;
+    service?: string;
+    isContract: boolean;
+    sanctioned: boolean;
+    balance?: number;
+    transfers: number;
+    truncated: boolean;
+  };
+  warnings: string[];
+  durationMs: number;
 }

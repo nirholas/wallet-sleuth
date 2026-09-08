@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cytoscape, { type Core, type ElementDefinition } from 'cytoscape';
+import { api } from '../lib/api';
 import { shortAddress, usd, when } from '../lib/format';
-import type { AnalysisReport, FlowEdge } from '../lib/types';
+import type { AnalysisReport, FlowEdge, FlowNode } from '../lib/types';
 
 /**
  * Where the value actually went.
@@ -35,8 +36,52 @@ export function FlowGraph({ report }: Props) {
   const instance = useRef<Core>();
   const [selected, setSelected] = useState<FlowEdge | undefined>();
   const [minUsd, setMinUsd] = useState(0);
+  // Expansion state lives here rather than in the report, because it is the reader's exploration of
+  // the graph and should not pretend to be part of the analysis that was run.
+  const [extraNodes, setExtraNodes] = useState<FlowNode[]>([]);
+  const [extraEdges, setExtraEdges] = useState<FlowEdge[]>([]);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [expanding, setExpanding] = useState<string | undefined>();
+  const [expandError, setExpandError] = useState<string | undefined>();
 
-  const flow = report.flow;
+  const flow = useMemo(() => {
+    if (extraNodes.length === 0 && extraEdges.length === 0) return report.flow;
+    const nodes = new Map(report.flow.nodes.map((node) => [node.id, node]));
+    for (const node of extraNodes) if (!nodes.has(node.id)) nodes.set(node.id, node);
+    const edges = new Map(report.flow.edges.map((edge) => [edge.id, edge]));
+    for (const edge of extraEdges) if (!edges.has(edge.id)) edges.set(edge.id, edge);
+    return {
+      ...report.flow,
+      nodes: [...nodes.values()],
+      edges: [...edges.values()],
+      totalUsd: [...edges.values()].reduce((sum, edge) => sum + edge.usd, 0),
+      sanctionedNodes: [...nodes.values()].filter((node) => node.sanctioned).map((node) => node.id),
+    };
+  }, [report.flow, extraNodes, extraEdges]);
+
+  const expandNode = useCallback(
+    async (node: FlowNode) => {
+      if (expanded.has(node.id) || expanding) return;
+      setExpanding(node.id);
+      setExpandError(undefined);
+      try {
+        const result = await api.expand(node.chain, node.address);
+        setExtraNodes((current) => [...current, ...result.flow.nodes]);
+        setExtraEdges((current) => [...current, ...result.flow.edges]);
+        setExpanded((current) => new Set(current).add(node.id));
+        if (result.flow.edges.length === 0) {
+          setExpandError(
+            result.warnings[0] ?? 'No value movement could be read for that address at this depth.',
+          );
+        }
+      } catch (err) {
+        setExpandError((err as Error).message);
+      } finally {
+        setExpanding(undefined);
+      }
+    },
+    [expanded, expanding],
+  );
   const inputs = useMemo(() => new Set(flow.nodes.filter((n) => n.kind === 'input').map((n) => n.id)), [flow]);
 
   const visibleEdges = useMemo(
@@ -63,6 +108,9 @@ export function FlowGraph({ report }: Props) {
             size: 18 + Math.min(30, Math.log10(1 + total) * 5),
             input: node.kind === 'input' ? 1 : 0,
             service: node.service ? 1 : 0,
+            sanctioned: node.sanctioned ? 1 : 0,
+            expanded: expanded.has(node.id) ? 1 : 0,
+            busy: expanding === node.id ? 1 : 0,
           },
         };
       });
@@ -82,7 +130,7 @@ export function FlowGraph({ report }: Props) {
       };
     });
     return [...nodes, ...edges];
-  }, [flow.nodes, visibleEdges, inputs]);
+  }, [flow.nodes, visibleEdges, inputs, expanded, expanding]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -111,6 +159,13 @@ export function FlowGraph({ report }: Props) {
         },
         { selector: 'node[input = 1]', style: { 'background-color': '#ffffff', 'border-color': '#ffffff' } },
         { selector: 'node[service = 1]', style: { shape: 'round-diamond', 'border-color': '#a6a6a6' } },
+        // A sanctioned address is the one thing on this graph that must never be missed.
+        {
+          selector: 'node[sanctioned = 1]',
+          style: { 'border-color': OUT, 'border-width': 4, 'background-color': OUT },
+        },
+        { selector: 'node[expanded = 1]', style: { 'border-color': '#ffffff', 'border-width': 3 } },
+        { selector: 'node[busy = 1]', style: { 'border-color': '#a6a6a6', 'border-style': 'dashed', 'border-width': 3 } },
         {
           selector: 'edge',
           style: {
@@ -141,6 +196,10 @@ export function FlowGraph({ report }: Props) {
       const id = event.target.id() as string;
       setSelected(flow.edges.find((edge) => edge.id === id));
     });
+    cy.on('tap', 'node', (event) => {
+      const node = flow.nodes.find((entry) => entry.id === (event.target.id() as string));
+      if (node) void expandNode(node);
+    });
     cy.on('tap', (event) => {
       if (event.target === cy) setSelected(undefined);
     });
@@ -149,7 +208,7 @@ export function FlowGraph({ report }: Props) {
       cy.destroy();
       instance.current = undefined;
     };
-  }, [elements, flow.edges]);
+  }, [elements, flow.edges, flow.nodes, expandNode]);
 
   useEffect(() => {
     const cy = instance.current;
@@ -203,7 +262,9 @@ export function FlowGraph({ report }: Props) {
 
       <div className="graph-wrap">
         <div ref={container} style={{ width: '100%', height: '100%' }} role="img" aria-label="Value flow graph" />
-        <div className="graph-hint">drag to pan, scroll to zoom, click a flow</div>
+        <div className="graph-hint">
+          {expanding ? 'expanding...' : 'click a node to follow its money, an edge for detail'}
+        </div>
         <div className="graph-legend">
           <span>
             <i style={{ background: IN }} />
@@ -219,8 +280,35 @@ export function FlowGraph({ report }: Props) {
           </span>
           <span>width = value (log)</span>
           <span>diamond = known service</span>
+          <span>
+            <i style={{ background: OUT }} />
+            sanctioned
+          </span>
         </div>
       </div>
+
+      {expandError ? (
+        <p className="hint" style={{ marginTop: 10 }}>
+          {expandError}
+        </p>
+      ) : null}
+      {expanded.size > 0 ? (
+        <p className="hint" style={{ marginTop: 10 }}>
+          {expanded.size} address{expanded.size === 1 ? '' : 'es'} expanded beyond the original analysis. Those
+          hops were read on demand and were not scored by the linkage signals.{' '}
+          <button
+            type="button"
+            className="linklike"
+            onClick={() => {
+              setExtraNodes([]);
+              setExtraEdges([]);
+              setExpanded(new Set());
+            }}
+          >
+            Reset to the analysed set
+          </button>
+        </p>
+      ) : null}
 
       {selected ? <FlowDetail edge={selected} report={report} /> : null}
 

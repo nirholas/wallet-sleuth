@@ -24,6 +24,7 @@ const report: AnalysisReport = {
       truncated: false,
       historyComplete: true,
       unreadable: false,
+      sanctioned: false,
       warnings: [],
       explorerUrl: 'https://etherscan.io/address/0xA',
       cluster: 'cluster-1',
@@ -59,7 +60,7 @@ const report: AnalysisReport = {
   hubs: [],
   warnings: [],
   providers: [],
-  flow: { nodes: [], edges: [], totalUsd: 0, unpricedAssets: [], trimmed: false },
+  flow: { nodes: [], edges: [], totalUsd: 0, unpricedAssets: [], trimmed: false, sanctionedNodes: [] },
   rejected: [],
   summary: { addresses: 1, linked: 2, clusters: 0, strongestScore: 82, transfersAnalyzed: 10, chains: ['ethereum'] },
 };

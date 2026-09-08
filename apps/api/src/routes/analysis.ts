@@ -4,6 +4,7 @@ import {
   BANDS,
   DEFAULT_OPTIONS,
   edgesToCsv,
+  expand,
   LICENSE,
   listChains,
   MAX_ADDRESSES,
@@ -219,6 +220,53 @@ export function registerAnalysisRoutes(app: FastifyInstance, queue: JobQueue, an
       }
 
       return reply.code(202).send(toView(job));
+    },
+  );
+
+  app.post(
+    '/v1/expand',
+    {
+      ...(analyzeLimit > 0
+        ? { config: { rateLimit: { max: analyzeLimit * 4, timeWindow: '1 minute' } } }
+        : {}),
+      schema: {
+        summary: 'Read one address\'s value neighbourhood',
+        description:
+          'Pulls the flow graph around a single address. Used to expand a counterparty in the graph without starting a new analysis. Deliberately shallower and faster than /v1/analyze: it reads value movement, not linkage signals.',
+        tags: ['analysis'],
+        body: {
+          type: 'object',
+          required: ['chain', 'address'],
+          properties: {
+            chain: { type: 'string' },
+            address: { type: 'string' },
+            maxTransfers: { type: 'integer', minimum: 20, maximum: 500 },
+            budgetMs: { type: 'integer', minimum: 5000, maximum: 120000 },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const parsed = z
+        .object({
+          chain: z.string().min(1),
+          address: z.string().min(1),
+          maxTransfers: z.number().int().min(20).max(500).optional(),
+          budgetMs: z.number().int().min(5000).max(120_000).optional(),
+        })
+        .strict()
+        .safeParse(request.body);
+      if (!parsed.success) {
+        return reply.code(400).send({
+          error: 'invalid_input',
+          message: 'request body failed validation',
+          details: parsed.error.issues,
+        });
+      }
+      // A client that navigates away should not leave the expansion burning upstream requests.
+      const controller = new AbortController();
+      request.raw.on('close', () => controller.abort());
+      return expand(parsed.data, { cache: queue.cache, signal: controller.signal });
     },
   );
 

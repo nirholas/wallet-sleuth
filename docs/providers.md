@@ -77,8 +77,15 @@ lane that is down costs a label or a dollar sign, never a result.
 | Valuation | [DefiLlama coins](https://defillama.com/docs/api) | USD value per transfer, for both namespaces from one request shape (`solana:<mint>`, `ethereum:<contract>`, `coingecko:<id>` for natives) |
 | Solana token names | [Jupiter token search](https://station.jup.ag/) | Symbols for mints the RPC returns unnamed |
 | Solana domains | [Bonfida SNS](https://sns.guide/) | `.sol` reverse records, the counterpart to ENS on the EVM side |
+| Sanctions | [OFAC SDN mirror](https://github.com/0xB10C/ofac-sanctioned-digital-currency-addresses) | Whether an address appears on the US Treasury sanctions list for its chain |
 
 ENS names need no lane of their own: Blockscout already returns `ens_domain_name` with account facts.
+
+Sanctions screening is the exception to "best effort". A false negative there matters more than
+latency, so the lists are cached for hours rather than days, and a list that fails to load is stated
+in the report: **"not screened" and "screened clean" are very different claims and must never look
+alike.** The source is a parsed mirror of the published SDN list, not the register itself, so a hit
+is a strong signal to verify against Treasury directly and never a legal conclusion on its own.
 
 Valuation quotes carry a confidence score and anything below 0.7 is discarded rather than shown,
 because a thin-liquidity quote on an obscure token is worse than no number at all. Assets that cannot

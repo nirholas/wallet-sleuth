@@ -11,6 +11,7 @@ import { scoreEdges } from './score.js';
 import { buildFlow } from './flow.js';
 import { EMPTY_NAMES, resolveNames } from './names.js';
 import { loadPrices } from './prices.js';
+import { loadSanctions } from './sanctions.js';
 import { buildContext, runSignals, SIGNALS_BY_ID } from './signals/index.js';
 import { MemoryCache, type CacheStore } from './util/cache.js';
 import type {
@@ -147,7 +148,8 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
   // the analysis itself.
   const allTransfers = collected.bundles.flatMap((bundle) => bundle.transfers);
   onProgress?.({ phase: 'score', progress: 0.92, message: 'valuing transfers and resolving names' });
-  const [prices, names] = await Promise.all([
+  const analysedChains = [...new Set(collected.bundles.map((bundle) => bundle.ref.chain))];
+  const [prices, names, sanctions] = await Promise.all([
     loadPrices(allTransfers, { cache: ctx.cache, signal: deps.signal }),
     (async () => {
       const solanaBundles = collected.bundles.filter((bundle) => bundle.ref.namespace === 'solana');
@@ -170,6 +172,7 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
         { cache: ctx.cache, signal: deps.signal },
       ).catch(() => EMPTY_NAMES);
     })(),
+    loadSanctions(analysedChains, { cache: ctx.cache, signal: deps.signal }),
   ]);
 
   const clusterByKey = new Map<string, string>();
@@ -197,6 +200,7 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
       truncated: bundle.truncated,
       historyComplete: bundle.reachedGenesis,
       unreadable: bundle.facts.unreadable === true,
+      sanctioned: sanctions.isSanctioned(bundle.ref.chain, bundle.ref.normalized),
       warnings: bundle.warnings,
       explorerUrl: addressUrl(bundle.ref.chain, bundle.ref.address),
       cluster: clusterByKey.get(bundle.ref.key) ?? null,
@@ -249,6 +253,18 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
     );
   }
 
+  const sanctioned = accounts.filter((account) => account.sanctioned);
+  if (sanctioned.length > 0) {
+    warnings.unshift(
+      `SANCTIONS: ${sanctioned.map((account) => account.address).join(', ')} ${sanctioned.length === 1 ? 'appears' : 'appear'} on the OFAC sanctions list for ${sanctioned.length === 1 ? 'its' : 'their'} chain. Verify against the Treasury SDN register before acting on this.`,
+    );
+  }
+  if (!sanctions.complete) {
+    warnings.push(
+      `sanctions screening was incomplete (${sanctions.unavailable.join(', ')} unavailable), so no address here can be described as screened clean`,
+    );
+  }
+
   const labelledInputs = accounts.filter((account) => account.label?.hub);
   if (labelledInputs.length > 0) {
     warnings.push(
@@ -284,7 +300,7 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
     warnings,
     providers: stats.snapshot(),
     rejected: parsed.rejected,
-    flow: buildFlow(collected.bundles, clusters, prices, names),
+    flow: buildFlow(collected.bundles, clusters, prices, names, sanctions),
     summary: {
       addresses: accounts.length,
       linked: new Set(edges.flatMap((edge) => [edge.a, edge.b])).size,

@@ -145,3 +145,52 @@ describeLive('end to end', () => {
     expect(strong).toHaveLength(0);
   }, 240_000);
 });
+
+describeLive('keyless enrichment', () => {
+  it('prices both namespaces from one source', async () => {
+    const { loadPrices } = await import('../../packages/core/src/prices.js');
+    const { MemoryCache } = await import('../../packages/core/src/util/cache.js');
+    const transfers = [
+      {
+        chain: 'ethereum',
+        txHash: '0x' + 'a'.repeat(64),
+        ts: 1_700_000_000,
+        from: '0x1',
+        to: '0x2',
+        kind: 'native' as const,
+        asset: { kind: 'native' as const, symbol: 'ETH', decimals: 18 },
+        rawValue: '1',
+        value: 1,
+        success: true,
+        index: 0,
+      },
+      {
+        chain: 'solana',
+        txHash: 'sig',
+        ts: 1_700_000_000,
+        from: 'a',
+        to: 'b',
+        kind: 'token' as const,
+        asset: { kind: 'token' as const, address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', decimals: 6 },
+        rawValue: '1000000',
+        value: 1,
+        success: true,
+        index: 0,
+      },
+    ];
+    const prices = await loadPrices(transfers, { cache: new MemoryCache() });
+    // A dollar of USDC is a dollar; ETH is worth rather more. Both must resolve from one call.
+    expect(prices.usd(transfers[1]!)).toBeGreaterThan(0.9);
+    expect(prices.usd(transfers[1]!)).toBeLessThan(1.1);
+    expect(prices.usd(transfers[0]!)).toBeGreaterThan(50);
+  }, 60_000);
+
+  it('screens against the live OFAC list', async () => {
+    const { loadSanctions } = await import('../../packages/core/src/sanctions.js');
+    const { MemoryCache } = await import('../../packages/core/src/util/cache.js');
+    const screen = await loadSanctions(['ethereum', 'solana'], { cache: new MemoryCache() });
+    expect(screen.complete).toBe(true);
+    // An address with no plausible reason to be listed must not be.
+    expect(screen.isSanctioned('ethereum', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')).toBe(false);
+  }, 60_000);
+});

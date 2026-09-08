@@ -103,6 +103,21 @@ Cytoscape Desktop.
 
 Cancels a queued or running job.
 
+## POST /v1/expand
+
+Reads one address's value neighbourhood, without running an analysis. This is what backs
+click-to-expand in the flow graph: it answers "and where did it go from there" in a few seconds
+rather than a minute.
+
+```json
+{ "chain": "solana", "address": "Dv34prGm2BT7Ph2n6qKLgzeLgjnii87RJJ7Db6ZQQvKM", "maxTransfers": 120 }
+```
+
+Returns the flow subgraph around that address plus its facts (label, service kind, contract status,
+sanctions hit, balance) and the providers that served it. Deliberately shallower than `/v1/analyze`:
+it reads value movement, not linkage signals, so nothing it returns is scored. It carries its own
+rate limit, more generous than the analysis limit because each call is far cheaper.
+
 ## POST /v1/parse
 
 Validates an address list without spending any upstream requests. Returns the accepted references,

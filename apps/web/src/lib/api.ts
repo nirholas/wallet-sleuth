@@ -1,4 +1,11 @@
-import type { AnalysisReport, ChainDescriptor, JobView, ParseResult, SignalDoc } from './types';
+import type {
+  AnalysisReport,
+  ChainDescriptor,
+  ExpandResult,
+  JobView,
+  ParseResult,
+  SignalDoc,
+} from './types';
 
 export class ApiError extends Error {
   constructor(
@@ -51,6 +58,11 @@ export const api = {
   analyze: (body: unknown) =>
     request<JobView>('/v1/analyze', { method: 'POST', body: JSON.stringify(body) }),
   job: (id: string) => request<JobView>(`/v1/jobs/${id}`),
+  expand: (chain: string, address: string, maxTransfers = 120) =>
+    request<ExpandResult>('/v1/expand', {
+      method: 'POST',
+      body: JSON.stringify({ chain, address, maxTransfers }),
+    }),
   report: (id: string) => request<AnalysisReport>(`/v1/jobs/${id}/report`),
   cancel: (id: string) => request<JobView>(`/v1/jobs/${id}`, { method: 'DELETE' }),
   exportUrl: (id: string, format: string) => `/v1/jobs/${id}/export?format=${encodeURIComponent(format)}`,

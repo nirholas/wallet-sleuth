@@ -3,6 +3,7 @@ import { addressUrl, txUrl } from './chains.js';
 import { labels } from './labels/index.js';
 import { formatUsd, type PriceBook } from './prices.js';
 import type { NameBook } from './names.js';
+import type { SanctionsScreen } from './sanctions.js';
 import type { ActivityBundle, Cluster, Transfer } from './types.js';
 
 /**
@@ -28,6 +29,8 @@ export interface FlowNode {
   /** Kind of service, when the address is a labelled one. */
   service?: string;
   isContract: boolean;
+  /** True when the address is on the OFAC list covering its chain. */
+  sanctioned: boolean;
   /** Cluster id when the node is an analysed address that joined one. */
   cluster: string | null;
   usdIn: number;
@@ -62,6 +65,8 @@ export interface FlowGraph {
   unpricedAssets: string[];
   /** True when edges were dropped to keep the graph readable. */
   trimmed: boolean;
+  /** Addresses in this graph that appear on an OFAC list. */
+  sanctionedNodes: string[];
 }
 
 export interface BuildFlowOptions {
@@ -94,6 +99,7 @@ export function buildFlow(
   clusters: Cluster[],
   prices: PriceBook,
   names: NameBook,
+  sanctions: SanctionsScreen | undefined,
   options: BuildFlowOptions = DEFAULT_FLOW_OPTIONS,
 ): FlowGraph {
   const registry = labels();
@@ -181,6 +187,7 @@ export function buildFlow(
       label: label?.name ?? bundle?.facts.name ?? names.domain(address),
       service: label?.kind,
       isContract: bundle?.facts.isContract === true,
+      sanctioned: sanctions?.isSanctioned(chain, address) === true,
       cluster: clusterOf.get(key) ?? null,
       usdIn: 0,
       usdOut: 0,
@@ -202,12 +209,14 @@ export function buildFlow(
     totalUsd += edge.usd;
   }
 
+  const ordered = [...nodes.values()].sort((a, b) => b.usdOut + b.usdIn - (a.usdOut + a.usdIn));
   return {
-    nodes: [...nodes.values()].sort((a, b) => b.usdOut + b.usdIn - (a.usdOut + a.usdIn)),
+    nodes: ordered,
     edges: kept,
     totalUsd,
     unpricedAssets: prices.unpriced.slice(0, 20),
     trimmed,
+    sanctionedNodes: ordered.filter((node) => node.sanctioned).map((node) => node.id),
   };
 }
 

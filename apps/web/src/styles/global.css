@@ -675,6 +675,14 @@ details.advanced[open] summary::before {
   border: none;
 }
 
+button.linklike {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: inherit;
+  padding: 0;
+}
+
 /* Direction: the only colour in the product. Green is value in, red is value out. */
 .tone-in {
   color: var(--in);

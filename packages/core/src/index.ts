@@ -31,9 +31,11 @@ export {
 } from './address.js';
 export { addressUrl, chainByEvmId, chains, defaultChains, getChain, listChains, resolveChain, txUrl } from './chains.js';
 export { buildClusters, clusterLabel } from './cluster.js';
+export { expand, EXPAND_DEFAULTS, type ExpandRequest, type ExpandResult } from './expand.js';
 export { buildFlow, describeEdge, DEFAULT_FLOW_OPTIONS, type FlowEdge, type FlowGraph, type FlowNode } from './flow.js';
 export { EMPTY_NAMES, resolveNames, type NameBook } from './names.js';
 export { formatUsd, loadPrices, priceKey, type PriceBook, type PriceQuote } from './prices.js';
+export { loadSanctions, NOT_SCREENED, type SanctionsScreen } from './sanctions.js';
 export { collectBundles, enrichCounterparties, type ContextAccount } from './collect.js';
 export { SleuthError, BudgetExceededError, InvalidInputError, ProviderError } from './errors.js';
 export { labels, LabelRegistry, resetLabels } from './labels/index.js';

@@ -44,7 +44,7 @@ export class JobQueue extends EventEmitter {
   private sweeper: NodeJS.Timeout;
 
   constructor(
-    private readonly cache: CacheStore,
+    readonly cache: CacheStore,
     private readonly maxConcurrent: number,
     private readonly retentionMs: number,
     private readonly cacheTtlSeconds: number,

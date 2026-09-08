@@ -268,6 +268,8 @@ export interface AccountSummary {
   historyComplete: boolean;
   /** True when activity exists but no provider could serve it. Not the same as an idle address. */
   unreadable: boolean;
+  /** True when the address appears on the OFAC list covering its chain. */
+  sanctioned: boolean;
   warnings: string[];
   explorerUrl: string;
   /** Cluster the account was assigned to, or null when it stands alone. */

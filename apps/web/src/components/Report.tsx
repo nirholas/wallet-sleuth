@@ -252,6 +252,14 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
                           7702 account
                         </span>
                       ) : null}
+                      {account.sanctioned ? (
+                        <span
+                          className="chip tone-out"
+                          title="Appears on the OFAC sanctions list for this chain. Verify against the Treasury SDN register."
+                        >
+                          OFAC sanctioned
+                        </span>
+                      ) : null}
                       {account.unreadable ? (
                         <span className="chip tone-out" title={account.warnings.join(' ')}>
                           no provider could serve this history
