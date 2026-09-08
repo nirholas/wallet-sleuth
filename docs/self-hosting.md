@@ -60,7 +60,12 @@ Everything is optional. Wallet Sleuth runs with an empty environment.
 
 ## Operating it
 
-**Health.** `/healthz` for liveness, `/readyz` for readiness. `/readyz` returns `503` when the cache
+**Health.** Liveness answers at `/healthz`, `/health`, `/livez` and `/_health`; readiness at
+`/readyz` and `/ready`. There are aliases because platforms disagree about the conventional path,
+and at least one disagreement is silent: **Google Cloud Run's frontend answers the exact path
+`/healthz` with its own 404 page and never forwards the request**, so a service that registers only
+that path looks dead there while being perfectly healthy. Probe `/readyz` on Cloud Run. All of them
+return JSON, never the web client, so a health check can actually fail. `/readyz` returns `503` when the cache
 backend is unreachable or no provider is available, and its body carries queue depth and live
 per-host pacing, which is the first place to look when analyses get slow.
 

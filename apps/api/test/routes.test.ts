@@ -232,3 +232,37 @@ describe('option validation', () => {
     expect(response.json().error).toBe('not_found');
   });
 });
+
+describe('health endpoints', () => {
+  // Google's frontend answers the exact path /healthz with its own 404 on Cloud Run and never
+  // forwards it, so a service that only registers that one path looks dead when probed there.
+  const liveness = ['/healthz', '/health', '/livez', '/_health'];
+  const readiness = ['/readyz', '/ready'];
+
+  it.each(liveness)('answers liveness at %s', async (path) => {
+    const response = await app.inject({ method: 'GET', url: path });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ status: 'ok' });
+  });
+
+  it.each(readiness)('answers readiness at %s', async (path) => {
+    const response = await app.inject({ method: 'GET', url: path });
+    expect(response.statusCode).toBe(200);
+    expect(response.json().providers.length).toBeGreaterThan(0);
+  });
+
+  it('answers a probe that arrives with a trailing slash', async () => {
+    const response = await app.inject({ method: 'GET', url: '/healthz/' });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ status: 'ok' });
+  });
+
+  it('does not let the web client fallback answer a health path with 200 HTML', async () => {
+    // A catch-all that returns index.html for every unknown path turns a health check into
+    // something that can never fail, which is worse than having none.
+    for (const path of [...liveness, ...readiness]) {
+      const response = await app.inject({ method: 'GET', url: path });
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+    }
+  });
+});

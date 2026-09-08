@@ -7,7 +7,7 @@ import rateLimit from '@fastify/rate-limit';
 import fastifyStatic from '@fastify/static';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import Fastify, { type FastifyInstance } from 'fastify';
+import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import { SleuthError, buildProviders, MemoryCache, schedulerSnapshot, VERSION, type CacheStore } from '@wallet-sleuth/core';
 import { loadConfig, type ServerConfig } from './config.js';
 import { JobQueue } from './lib/jobs.js';
@@ -15,6 +15,19 @@ import { RedisCache } from './lib/redis-cache.js';
 import { registerAnalysisRoutes } from './routes/analysis.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Paths that report on the service itself.
+ *
+ * There are several because platforms disagree, and one of those disagreements is silent: Google's
+ * frontend answers `/healthz` with its own 404 page and never forwards the request, so a deployment
+ * probed there looks dead while being perfectly healthy. Registering the common aliases means the
+ * probe a given platform or operator reaches for is a real check rather than the SPA fallback
+ * answering 200 to everything, which is the failure mode that cannot alert.
+ */
+const LIVENESS_PATHS = ['/healthz', '/health', '/livez', '/_health'];
+const READINESS_PATHS = ['/readyz', '/ready'];
+const HEALTH_PATHS = [...LIVENESS_PATHS, ...READINESS_PATHS];
 
 /** Locates the built web client, so one process serves both the API and the UI. */
 function findWebRoot(config: ServerConfig): string | undefined {
@@ -40,6 +53,9 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
     logger: { level: config.logLevel },
     trustProxy: true,
     bodyLimit: 1024 * 512,
+    // `/healthz` and `/healthz/` must both answer. Google's frontend reserves the exact former path
+    // on Cloud Run, so a probe there arrives with the slash or not at all.
+    ignoreTrailingSlash: true,
   });
 
   const cache: CacheStore = config.redisUrl ? new RedisCache(config.redisUrl) : new MemoryCache(20_000);
@@ -78,8 +94,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
       // Health checks and the static metadata routes are exempt: they cost nothing upstream, and
       // counting them means a couple of page loads can lock a user out of the tool itself.
       allowList: (request) =>
-        request.url.startsWith('/healthz') ||
-        request.url.startsWith('/readyz') ||
+        HEALTH_PATHS.some((path) => request.url === path || request.url.startsWith(`${path}?`)) ||
         request.url.startsWith('/v1/chains') ||
         request.url.startsWith('/v1/signals') ||
         request.url.startsWith('/v1/version'),
@@ -144,9 +159,11 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
     });
   });
 
-  app.get('/healthz', { schema: { hide: true } }, async () => ({ status: 'ok', version: VERSION }));
+  for (const path of LIVENESS_PATHS) {
+    app.get(path, { schema: { hide: true } }, async () => ({ status: 'ok', version: VERSION }));
+  }
 
-  app.get('/readyz', { schema: { hide: true } }, async (_request, reply) => {
+  const readiness = async (_request: FastifyRequest, reply: FastifyReply) => {
     const providers = buildProviders().map((provider) => provider.name);
     const redisOk = cache instanceof RedisCache ? await cache.ping() : true;
     const ready = providers.length > 0 && redisOk;
@@ -158,14 +175,17 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
       jobs: queue.stats(),
       upstream: schedulerSnapshot(),
     });
-  });
+  };
+  for (const path of READINESS_PATHS) {
+    app.get(path, { schema: { hide: true } }, readiness);
+  }
 
   registerAnalysisRoutes(app, queue, config.rateLimitPerMinute > 0 ? config.analyzeRateLimitPerMinute : 0);
 
   if (webRoot) {
     await app.register(fastifyStatic, { root: webRoot, prefix: '/', index: ['index.html'] });
     app.setNotFoundHandler(async (request, reply) => {
-      if (request.url.startsWith('/v1/') || request.url.startsWith('/healthz')) {
+      if (request.url.startsWith('/v1/') || HEALTH_PATHS.some((path) => request.url.startsWith(path))) {
         return reply.code(404).send({ error: 'not_found', message: `no route for ${request.url}` });
       }
       return reply.type('text/html').sendFile('index.html');

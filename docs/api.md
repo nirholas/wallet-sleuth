@@ -124,8 +124,11 @@ running engine.
 
 Engine version, the maximum addresses per analysis, the default options and the band definitions.
 
-## GET /healthz and /readyz
+## Health
 
-`/healthz` is a liveness check. `/readyz` reports the configured providers, whether the cache backend
+Liveness: `/healthz`, `/health`, `/livez`, `/_health`. Readiness: `/readyz`, `/ready`. The aliases
+exist because platforms disagree, and Google Cloud Run in particular intercepts the exact path
+`/healthz` at its frontend and answers it with its own 404 without ever reaching the service; probe
+`/readyz` there. `/readyz` reports the configured providers, whether the cache backend
 is reachable, current job queue depth and the live per-host request pacing, and returns `503` when
 the service is degraded. Both are exempt from rate limiting.
