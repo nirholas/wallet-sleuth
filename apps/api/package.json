@@ -1,0 +1,26 @@
+{
+  "name": "@braid/api",
+  "version": "1.0.0",
+  "description": "HTTP API and web host for Braid.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/server.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "concurrently -n tsc,api -c gray,cyan \"tsc -b --watch --preserveWatchOutput\" \"node --watch dist/server.js\"",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@braid/core": "1.0.0",
+    "@fastify/cors": "^10.0.1",
+    "@fastify/helmet": "^13.0.0",
+    "@fastify/rate-limit": "^10.2.1",
+    "@fastify/static": "^8.0.3",
+    "@fastify/swagger": "^9.4.0",
+    "@fastify/swagger-ui": "^5.2.0",
+    "fastify": "^5.2.0",
+    "ioredis": "^5.4.2",
+    "zod": "^3.24.1"
+  }
+}

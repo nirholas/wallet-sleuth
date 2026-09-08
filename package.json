@@ -1,0 +1,46 @@
+{
+  "name": "braid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wallet linkage analysis for EVM and Solana. Paste public addresses, get the evidence that ties them together.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "braid": "node apps/cli/dist/index.js",
+    "build": "npm run build --workspace @braid/core && npm run build --workspace @braid/api && npm run build --workspace @braid/cli && npm run build --workspace @braid/web",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "clean": "rm -rf packages/*/dist apps/*/dist apps/web/dist **/*.tsbuildinfo",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev --workspace @braid/api\" \"npm run dev --workspace @braid/web\"",
+    "dev:api": "npm run dev --workspace @braid/api",
+    "dev:web": "npm run dev --workspace @braid/web",
+    "docs:signals": "node scripts/generate-signal-docs.mjs",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "start": "node apps/api/dist/server.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "BRAID_LIVE=1 vitest run test/live",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b packages/core apps/api apps/cli && tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p apps/web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^5.4.11",
+    "vitest": "^3.2.4"
+  }
+}

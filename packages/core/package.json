@@ -1,0 +1,33 @@
+{
+  "name": "@braid/core",
+  "version": "1.0.0",
+  "description": "Linkage analysis engine: providers, signals, scoring and clustering for EVM and Solana addresses.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.6.1",
+    "bs58": "^6.0.0",
+    "lru-cache": "^11.0.2",
+    "p-limit": "^6.2.0"
+  }
+}

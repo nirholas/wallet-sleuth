@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "types": ["node"],
+    "lib": ["ES2023", "DOM"]
+  },
+  "include": ["packages/*/test/**/*.ts", "apps/*/test/**/*.ts", "test/**/*.ts", "scripts/**/*.ts"]
+}
