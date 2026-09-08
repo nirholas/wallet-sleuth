@@ -65,6 +65,26 @@ answer wins, and a disagreement is written into the report.
 Endpoints are ranked by a decaying success rate, so work flows to whichever one is actually serving
 it. `GET /readyz` exposes the live pacing and health per host.
 
+## Enrichment lanes, also keyless
+
+History alone produces a graph of base58 strings moving unnamed tokens, which is technically correct
+and useless to read. Three more public endpoints turn that into something an investigator can reason
+about. All three are keyless, all three are best effort, and none of them can fail an analysis: a
+lane that is down costs a label or a dollar sign, never a result.
+
+| Lane | Source | What it adds |
+| --- | --- | --- |
+| Valuation | [DefiLlama coins](https://defillama.com/docs/api) | USD value per transfer, for both namespaces from one request shape (`solana:<mint>`, `ethereum:<contract>`, `coingecko:<id>` for natives) |
+| Solana token names | [Jupiter token search](https://station.jup.ag/) | Symbols for mints the RPC returns unnamed |
+| Solana domains | [Bonfida SNS](https://sns.guide/) | `.sol` reverse records, the counterpart to ENS on the EVM side |
+
+ENS names need no lane of their own: Blockscout already returns `ens_domain_name` with account facts.
+
+Valuation quotes carry a confidence score and anything below 0.7 is discarded rather than shown,
+because a thin-liquidity quote on an obscure token is worse than no number at all. Assets that cannot
+be priced are listed in the report as `unpricedAssets` and their flows are sized by transfer count
+instead of dollars, so an unpriced token is never quietly dropped from the picture.
+
 ## Labels
 
 Wallet Sleuth ships a curated list of service addresses: exchange hot wallets, bridges, routers, mixers,

@@ -32,6 +32,8 @@ export interface ChainDescriptor {
   blockscout?: string;
   /** Whether Etherscan V2 covers this chain when a key is configured. */
   etherscanV2?: boolean;
+  /** CoinGecko id for the native asset, used to price native transfers in USD. */
+  coingeckoId?: string;
   /** True for chains enabled by default when a caller does not name one. */
   default?: boolean;
 }
@@ -331,6 +333,8 @@ export interface AnalysisReport {
   providers: ProviderStat[];
   /** Addresses the caller supplied that could not be parsed. */
   rejected: { input: string; reason: string }[];
+  /** Directed value movement between the analysed addresses and their counterparties. */
+  flow: import('./flow.js').FlowGraph;
   summary: {
     addresses: number;
     linked: number;

@@ -619,6 +619,62 @@ details.advanced[open] summary::before {
   margin-bottom: 10px;
 }
 
+/* View tabs and the flow toolbar */
+.view-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.view-tabs button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 550;
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease), background 0.15s var(--ease);
+}
+.view-tabs button span {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-faint);
+  font-family: var(--mono);
+}
+.view-tabs button:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.view-tabs button.active {
+  border-color: var(--text);
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.flow-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.flow-toolbar label {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.flow-toolbar input[type='range'] {
+  width: 200px;
+  accent-color: var(--text);
+  padding: 0;
+  background: none;
+  border: none;
+}
+
 /* Direction: the only colour in the product. Green is value in, red is value out. */
 .tone-in {
   color: var(--in);

@@ -112,6 +112,42 @@ export interface AnalysisOptions {
   budgetMs: number;
 }
 
+export interface FlowNode {
+  id: string;
+  chain: string;
+  address: string;
+  kind: 'input' | 'counterparty';
+  label?: string;
+  service?: string;
+  isContract: boolean;
+  cluster: string | null;
+  usdIn: number;
+  usdOut: number;
+  transfers: number;
+  explorerUrl: string;
+}
+
+export interface FlowEdge {
+  id: string;
+  source: string;
+  target: string;
+  transfers: number;
+  usd: number;
+  partialValue: boolean;
+  asset: string;
+  firstTs: number;
+  lastTs: number;
+  samples: { hash: string; url: string; value: number; usd?: number }[];
+}
+
+export interface FlowGraph {
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+  totalUsd: number;
+  unpricedAssets: string[];
+  trimmed: boolean;
+}
+
 export interface AnalysisReport {
   id: string;
   version: string;
@@ -125,6 +161,7 @@ export interface AnalysisReport {
   warnings: string[];
   providers: ProviderStat[];
   rejected: { input: string; reason: string }[];
+  flow: FlowGraph;
   summary: {
     addresses: number;
     linked: number;
@@ -172,5 +209,6 @@ export interface SignalDoc {
 export interface ParseResult {
   accepted: { key: string; chain: string; address: string; namespace: Namespace; explicit: boolean }[];
   rejected: { input: string; reason: string }[];
+  flow: FlowGraph;
   distinctInputs: number;
 }

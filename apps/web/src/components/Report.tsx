@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { api } from '../lib/api';
-import { amount, bandClass, duration, labelKey, splitKey, when } from '../lib/format';
+import { amount, bandClass, duration, labelKey, splitKey, usd, when } from '../lib/format';
 import type { AnalysisReport, ChainDescriptor, Evidence, LinkEdge } from '../lib/types';
+import { FlowGraph } from './FlowGraph';
 import { Graph } from './Graph';
 
 const BAND_MEANING: Record<string, string> = {
@@ -14,6 +15,9 @@ const BAND_MEANING: Record<string, string> = {
 
 export function Report({ report, chains = [] }: { report: AnalysisReport; chains?: ChainDescriptor[] }) {
   const [selectedEdge, setSelectedEdge] = useState<string | undefined>();
+  // Flow leads, because value and direction are facts off the chain, while a linkage score is an
+  // inference layered on top of them. A reader should meet the evidence before the conclusion.
+  const [view, setView] = useState<'flow' | 'linkage'>('flow');
   // Native symbols come from the running engine's chain registry rather than a copy in the client,
   // so adding a chain in one place is enough.
   const nativeSymbol = (chain: string) => chains.find((entry) => entry.slug === chain)?.nativeSymbol ?? '';
@@ -46,16 +50,51 @@ export function Report({ report, chains = [] }: { report: AnalysisReport; chains
             <span>transfers read</span>
           </div>
           <div className="stat">
+            <b>{usd(report.flow.totalUsd)}</b>
+            <span>value traced</span>
+          </div>
+          <div className="stat">
             <b>{duration(report.durationMs)}</b>
             <span>analysis time</span>
           </div>
         </div>
 
-        {report.edges.length > 0 ? (
-          <div style={{ marginTop: 18 }}>
-            <Graph report={report} selected={selectedEdge} onSelect={setSelectedEdge} />
+        <div style={{ marginTop: 18 }}>
+          <div className="view-tabs" role="tablist" aria-label="Graph view">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === 'flow'}
+              className={view === 'flow' ? 'active' : ''}
+              onClick={() => setView('flow')}
+            >
+              Value flow
+              <span>{usd(report.flow.totalUsd)} moved</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === 'linkage'}
+              className={view === 'linkage' ? 'active' : ''}
+              onClick={() => setView('linkage')}
+            >
+              Linkage
+              <span>
+                {report.edges.length} link{report.edges.length === 1 ? '' : 's'}
+              </span>
+            </button>
           </div>
-        ) : null}
+          {view === 'flow' ? (
+            <FlowGraph report={report} />
+          ) : report.edges.length > 0 ? (
+            <Graph report={report} selected={selectedEdge} onSelect={setSelectedEdge} />
+          ) : (
+            <div className="empty">
+              <h3>No links above the reporting threshold</h3>
+              <p>There is nothing to draw here, but the value flow view still shows where the money went.</p>
+            </div>
+          )}
+        </div>
 
         <div className="btn-row" style={{ marginTop: 16 }}>
           <a className="btn" href={api.exportUrl(report.id, 'edges.csv')}>

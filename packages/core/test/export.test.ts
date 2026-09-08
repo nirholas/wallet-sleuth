@@ -59,6 +59,7 @@ const report: AnalysisReport = {
   hubs: [],
   warnings: [],
   providers: [],
+  flow: { nodes: [], edges: [], totalUsd: 0, unpricedAssets: [], trimmed: false },
   rejected: [],
   summary: { addresses: 1, linked: 2, clusters: 0, strongestScore: 82, transfersAnalyzed: 10, chains: ['ethereum'] },
 };

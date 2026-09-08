@@ -24,7 +24,8 @@ function report(id: string): AnalysisReport {
     hubs: [],
     warnings: [],
     providers: [],
-    rejected: [],
+    flow: { nodes: [], edges: [], totalUsd: 0, unpricedAssets: [], trimmed: false },
+  rejected: [],
     summary: { addresses: 0, linked: 0, clusters: 0, strongestScore: 0, transfersAnalyzed: 0, chains: [] },
   };
 }

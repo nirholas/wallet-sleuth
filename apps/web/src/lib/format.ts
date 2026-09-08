@@ -41,3 +41,14 @@ export function copy(text: string): Promise<void> {
   if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
   return Promise.reject(new Error('clipboard unavailable'));
 }
+
+/** Compact USD, matching the engine's own formatting so a label never disagrees with an export. */
+export function usd(value: number): string {
+  const abs = Math.abs(value);
+  if (abs >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
+  if (abs >= 1) return `$${value.toFixed(0)}`;
+  if (abs === 0) return '$0';
+  return `$${value.toFixed(2)}`;
+}

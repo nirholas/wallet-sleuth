@@ -8,6 +8,9 @@ import { labels } from './labels/index.js';
 import { buildProviders } from './providers/registry.js';
 import { StatsCollector, type ChainProvider, type FetchContext } from './providers/types.js';
 import { scoreEdges } from './score.js';
+import { buildFlow } from './flow.js';
+import { EMPTY_NAMES, resolveNames } from './names.js';
+import { loadPrices } from './prices.js';
 import { buildContext, runSignals, SIGNALS_BY_ID } from './signals/index.js';
 import { MemoryCache, type CacheStore } from './util/cache.js';
 import type {
@@ -134,10 +137,40 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
   const signalContext = buildContext(collected.bundles, context, options, deps.now);
   const { evidence, failures } = runSignals(signalContext, options.signals);
 
-  onProgress?.({ phase: 'score', progress: 0.9, message: 'scoring and clustering' });
+  onProgress?.({ phase: 'score', progress: 0.85, message: 'scoring and clustering' });
   const edges = scoreEdges(evidence, options.minScore);
   const keys = collected.bundles.map((bundle) => bundle.ref.key);
   const clusters = buildClusters(edges, keys, options.clusterThreshold);
+
+  // Valuation and naming run after the signals because nothing in the scoring depends on them:
+  // they exist to make the result readable, so a slow or missing price source costs labels, never
+  // the analysis itself.
+  const allTransfers = collected.bundles.flatMap((bundle) => bundle.transfers);
+  onProgress?.({ phase: 'score', progress: 0.92, message: 'valuing transfers and resolving names' });
+  const [prices, names] = await Promise.all([
+    loadPrices(allTransfers, { cache: ctx.cache, signal: deps.signal }),
+    (async () => {
+      const solanaBundles = collected.bundles.filter((bundle) => bundle.ref.namespace === 'solana');
+      if (solanaBundles.length === 0) return EMPTY_NAMES;
+      const counterparties = new Set<string>();
+      for (const bundle of solanaBundles) {
+        for (const transfer of bundle.transfers) {
+          counterparties.add(transfer.from);
+          counterparties.add(transfer.to);
+        }
+      }
+      const mints = new Set<string>();
+      for (const transfer of allTransfers) {
+        if (transfer.chain === 'solana' && transfer.asset.address && !transfer.asset.symbol) {
+          mints.add(transfer.asset.address);
+        }
+      }
+      return resolveNames(
+        { addresses: [...counterparties], mints: [...mints] },
+        { cache: ctx.cache, signal: deps.signal },
+      ).catch(() => EMPTY_NAMES);
+    })(),
+  ]);
 
   const clusterByKey = new Map<string, string>();
   for (const cluster of clusters) for (const member of cluster.members) clusterByKey.set(member, cluster.id);
@@ -251,6 +284,7 @@ export async function analyze(request: AnalysisRequest, deps: AnalyzeDeps = {}):
     warnings,
     providers: stats.snapshot(),
     rejected: parsed.rejected,
+    flow: buildFlow(collected.bundles, clusters, prices, names),
     summary: {
       addresses: accounts.length,
       linked: new Set(edges.flatMap((edge) => [edge.a, edge.b])).size,
