@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Wallet linkage analysis for EVM and Solana. Paste public addresses, get the on-chain evidence that ties them together.",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "engines": {
     "node": ">=20.11"

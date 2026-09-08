@@ -2,7 +2,7 @@
   "name": "@wallet-sleuth/web",
   "version": "1.0.0",
   "description": "Wallet Sleuth web client: address input, live progress, linkage graph and evidence.",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "type": "module",
   "scripts": {

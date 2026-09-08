@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+/*
+ * Wallet Sleuth: on-chain linkage analysis for EVM and Solana.
+ * Copyright (C) 2026 Wallet Sleuth contributors.
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU Affero General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version. It is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+ * You should have received a copy of the License along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
 import { writeFileSync } from 'node:fs';
 import {
   accountsToCsv,
@@ -6,8 +18,10 @@ import {
   analyze,
   SleuthError,
   edgesToCsv,
+  LICENSE,
   listChains,
   MAX_ADDRESSES,
+  SOURCE_URL,
   toGraphml,
   VERSION,
   type AnalysisOptions,
@@ -47,7 +61,7 @@ const USAGE = `
     cat wallets.txt | sleuth analyze --json --out report.json
 
   Addresses may be piped in on stdin. Progress goes to stderr, output to stdout.
-  Docs: https://github.com/nirholas/wallet-sleuth
+  Free software under the AGPL v3 or later. Source: https://github.com/nirholas/wallet-sleuth
 `;
 
 async function readStdin(): Promise<string> {
@@ -71,7 +85,7 @@ async function main(): Promise<number> {
   const { flags } = parsed;
 
   if (flags.has('version')) {
-    process.stdout.write(`${VERSION}\n`);
+    process.stdout.write(`wallet-sleuth ${VERSION}\n${LICENSE}, source at ${SOURCE_URL}\n`);
     return 0;
   }
   if (flags.has('help') || !parsed.command) {

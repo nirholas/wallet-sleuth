@@ -63,3 +63,13 @@ point at, and prefer being conservative: a wrong label silently suppresses real 
 ## Commit messages
 
 `type(scope): what changed and why a reader would care.` Present tense, specific to the change.
+
+## Licensing of contributions
+
+Wallet Sleuth is licensed under the [GNU AGPL v3 or later](LICENSE). Contributions are accepted on
+the same terms: by opening a pull request you agree your work is licensed under the AGPL, inbound
+matching outbound. There is no CLA and no copyright assignment.
+
+If you add a new entry point, carry the licence notice at the top of the file the way
+`apps/api/src/server.ts` does. If you change what the deployed service does, remember that the
+network clause means whoever you serve it to can read the source of what they are being served.

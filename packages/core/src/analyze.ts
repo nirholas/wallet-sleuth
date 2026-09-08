@@ -22,6 +22,10 @@ import type {
 
 export const VERSION = '1.0.0';
 
+/** Licence and source, so the AGPL's network clause is answerable from the API itself. */
+export const LICENSE = 'AGPL-3.0-or-later';
+export const SOURCE_URL = 'https://github.com/nirholas/wallet-sleuth';
+
 /** Defaults tuned to finish inside a minute on keyless public endpoints. */
 export const DEFAULT_OPTIONS: AnalysisOptions = {
   maxTransfersPerAddress: 400,

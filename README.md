@@ -152,4 +152,13 @@ shows its evidence so a claim can be checked rather than trusted. Please read
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[GNU AGPL v3 or later](LICENSE).
+
+You can run it, read it, change it and self-host it, commercially or not. The one obligation the
+AGPL adds over a permissive licence is the network clause: if you run a modified version where other
+people can use it, those people must be able to get your modified source. Running it unmodified,
+internally or publicly, obliges you to nothing beyond keeping the notices intact.
+
+That choice is deliberate for this tool in particular. A chain analysis engine that quietly diverges
+from its published behaviour is worse than useless, because its output is used to make claims about
+people. The AGPL means the version being served is always a version anyone can audit.

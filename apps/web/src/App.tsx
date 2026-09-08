@@ -54,7 +54,10 @@ export function App() {
         </span>
         <span>
           <a href="/docs/privacy-and-ethics">Ethics</a> · <a href="/docs/interpreting-results">How to read a score</a>{' '}
-          · <a href="https://github.com/nirholas/wallet-sleuth">Source</a>
+          ·{' '}
+          <a href="https://github.com/nirholas/wallet-sleuth">
+            Source (AGPL v3)
+          </a>
         </span>
       </footer>
     </div>

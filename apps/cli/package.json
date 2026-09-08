@@ -2,7 +2,7 @@
   "name": "@wallet-sleuth/cli",
   "version": "1.0.0",
   "description": "Command line interface for Wallet Sleuth wallet linkage analysis.",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "bin": {
     "sleuth": "./dist/index.js"

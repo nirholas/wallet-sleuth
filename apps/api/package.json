@@ -2,7 +2,7 @@
   "name": "@wallet-sleuth/api",
   "version": "1.0.0",
   "description": "HTTP API and web host for Wallet Sleuth.",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "main": "./dist/server.js",
   "scripts": {

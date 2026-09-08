@@ -4,9 +4,11 @@ import {
   BANDS,
   DEFAULT_OPTIONS,
   edgesToCsv,
+  LICENSE,
   listChains,
   MAX_ADDRESSES,
   parseAddressList,
+  SOURCE_URL,
   toGraphml,
   VERSION,
 } from '@wallet-sleuth/core';
@@ -75,6 +77,10 @@ export function registerAnalysisRoutes(app: FastifyInstance, queue: JobQueue, an
     },
     async () => ({
       version: VERSION,
+      // The AGPL requires that anyone using this over a network can obtain its source. Answering
+      // that from the API means the offer travels with the deployment, not just with the README.
+      license: LICENSE,
+      source: SOURCE_URL,
       maxAddresses: MAX_ADDRESSES,
       defaults: DEFAULT_OPTIONS,
       bands: BANDS,

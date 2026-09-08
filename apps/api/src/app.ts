@@ -95,7 +95,7 @@ export async function buildApp(overrides: Partial<ServerConfig> = {}): Promise<B
         version: VERSION,
         description:
           'Wallet linkage analysis for EVM and Solana. Submit public addresses, receive scored links with the on-chain evidence behind each one.',
-        license: { name: 'MIT', url: 'https://opensource.org/licenses/MIT' },
+        license: { name: 'AGPL-3.0-or-later', url: 'https://www.gnu.org/licenses/agpl-3.0.html' },
       },
       tags: [
         { name: 'analysis', description: 'Submit and retrieve linkage analyses' },
