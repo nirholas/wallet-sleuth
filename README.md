@@ -161,3 +161,7 @@ redistribute it is granted. For a licence, open an issue.
 
 Third party dependencies remain under their own licences: see
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/wallet-sleuth&type=Date)](https://www.star-history.com/#nirholas/wallet-sleuth&Date)
