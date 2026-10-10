@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "wallet-sleuth"
+abstract: "Wallet linkage analysis for EVM and Solana. Paste public addresses, get the on-chain evidence that ties them together."
+repository-code: "https://github.com/nirholas/wallet-sleuth"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"

@@ -1,0 +1,28 @@
+# wallet-sleuth
+
+> Wallet linkage analysis for EVM and Solana. Paste public addresses, get the on-chain evidence that ties them together.
+
+wallet-sleuth is an open-source repository by nirholas, part of the three.ws ecosystem.
+
+## Docs
+
+- [README](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md): install, usage and reference
+- [Quick start](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#quick-start)
+- [What makes a link](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#what-makes-a-link)
+- [What makes it trustworthy](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#what-makes-it-trustworthy)
+- [Keyless by default, fast when configured](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#keyless-by-default-fast-when-configured)
+- [Chains](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#chains)
+- [Repository layout](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#repository-layout)
+- [Development](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#development)
+- [A word about what this is for](https://github.com/nirholas/wallet-sleuth/blob/HEAD/README.md#a-word-about-what-this-is-for)
+- [AGENTS.md](https://github.com/nirholas/wallet-sleuth/blob/HEAD/AGENTS.md): guidance for coding agents
+- [Full text for LLMs](https://github.com/nirholas/wallet-sleuth/blob/HEAD/llms-full.txt): the README inlined
+
+## Project
+
+- [Source](https://github.com/nirholas/wallet-sleuth)
+- [Issues](https://github.com/nirholas/wallet-sleuth/issues)
+- [Discussions](https://github.com/nirholas/wallet-sleuth/discussions)
+- [Homepage](https://github.com/nirholas/wallet-sleuth)
+- [three.ws](https://three.ws): the platform this is part of
+- [All repositories by nirholas](https://github.com/nirholas/nirholas#readme)
