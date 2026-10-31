@@ -19,9 +19,11 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          graph: ['cytoscape'],
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+        manualChunks(id: string) {
+          if (!id.includes('node_modules')) return undefined;
+          if (/node_modules\/cytoscape/.test(id)) return 'graph';
+          if (/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(id)) return 'vendor';
+          return undefined;
         },
       },
     },
