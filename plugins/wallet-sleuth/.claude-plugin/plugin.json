@@ -1,0 +1,17 @@
+{
+  "name": "wallet-sleuth",
+  "version": "1.0.0",
+  "description": "Wallet linkage analysis for EVM and Solana: score how addresses are connected and read the on-chain evidence.",
+  "author": {
+    "name": "nirholas"
+  },
+  "repository": "https://github.com/nirholas/wallet-sleuth",
+  "homepage": "https://github.com/nirholas/wallet-sleuth",
+  "keywords": [
+    "wallets",
+    "chain-analysis",
+    "solana",
+    "evm",
+    "forensics"
+  ]
+}

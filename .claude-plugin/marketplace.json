@@ -1,0 +1,22 @@
+{
+  "name": "wallet-sleuth",
+  "owner": {
+    "name": "nirholas"
+  },
+  "description": "Wallet linkage analysis for EVM and Solana: score how addresses are connected and read the on-chain evidence.",
+  "plugins": [
+    {
+      "name": "wallet-sleuth",
+      "source": "./plugins/wallet-sleuth",
+      "description": "Wallet linkage analysis for EVM and Solana: score how addresses are connected and read the on-chain evidence.",
+      "category": "data",
+      "tags": [
+        "wallets",
+        "chain-analysis",
+        "solana",
+        "evm",
+        "forensics"
+      ]
+    }
+  ]
+}
